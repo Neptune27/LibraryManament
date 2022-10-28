@@ -63,6 +63,7 @@ public class HINHCHUNHAT implements IMenu {
         menu.add("HCM", hcn::generateMenu);
         menu.add("Print Hello world inline", ()-> System.out.println("Hello World!"));
         menu.add("Disable Press Enter", ()->menu.setPauseNext(false));
+        System.out.println("Hello Word");
         menu.show();
     }
 }
