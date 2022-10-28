@@ -64,6 +64,7 @@ public class HINHCHUNHAT implements IMenu {
         menu.add("Print Hello world inline", ()-> System.out.println("Hello World!"));
         menu.add("Disable Press Enter", ()->menu.setPauseNext(false));
         System.out.println("Hello Word");
+        menu.add("Enable Press Enter", ()->menu.setPauseNext(true));
         menu.show();
     }
 }
