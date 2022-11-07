@@ -1,67 +1,88 @@
 package Book;
 
+import General.Manage.Management;
+import General.Menu.RunnableMenu;
+import Interface.ISaveLoad;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class QuanLySach {
     private Scanner sc;
-    private ArrayList<Sach> listSach;
+    private static ArrayList<Sach> listSach;
 
     public QuanLySach() {
-        this.listSach = new ArrayList<Sach>();
+        listSach = new ArrayList<Sach>();
     }
 
     public QuanLySach(ArrayList<Sach> listSach) {
-        this.listSach = listSach;
+        listSach = listSach;
     }
     public void menuQuanLySach(QuanLySach danhSach) throws CloneNotSupportedException {
-        sc = new Scanner(System.in);
-        int luachon;
-        do {
-            System.out.println("Quản Lý Sách----------------");
-            System.out.println("\tChức năng\t");
-            System.out.println("1.In tất cả các sách");
-            System.out.println("2.Thống kê");
-            System.out.println("3.Thêm sách vào ArrayList");
-            System.out.println("4.Xóa Sách");
-            System.out.println("5.Sửa đổi thông tin sách");
-            System.out.println("6.Tìm kiếm sách");
-            System.out.println("7.Thoát");
-            System.out.println("\tCập nhật CSDL\t");
-            System.out.println("8.Đọc CSDL vào ArrayList");
-            System.out.println("9.Ghi mới từ ArrayList vào CSDL");
-            System.out.println("----------------------------");
-            luachon = Integer.parseInt(sc.nextLine());
+        RunnableMenu menu = new RunnableMenu("Quản Lý Sách");
 
-            switch (luachon) {
-                case 1:
-                    danhSach.inDanhSach();
-                    break;
-                case 2:
-                    danhSach.thongKe();
-                    break;
-                case 3:
-                    danhSach.themSach();
-                    break;
-                case 4:
-                    danhSach.xoaSach();
-                    break;
-                case 5:
-                    danhSach.suaThongTinSach();
-                    break;
-                case 6:
-                    danhSach.timKiem();
-                    break;
-                case 8:
-                    danhSach.doctuCSDL();
-                    break;
-                case 9:
-                    danhSach.ghiVaoCSDL();
-                    break;
+//        menu.addSection("Chức năng");
+//        menu.add("In ra danh sách mượn sách", QuanLySach::inDanhSach);
+//        menu.add("Thêm mượn sách", );
+//        menu.add("Thống kê sách mượn", QuanLyMuonSach::thongKe);
+//        menu.add("Trả sách", QuanLyMuonSach::traSach);
+//        menu.add("Sửa đổi thông tin mượn", QuanLyMuonSach::suaThongTinSachMuon);
+//        menu.add("Tìm kiếm sách mượn", QuanLyMuonSach::timKiem);
+//
+//        menu.addSection("Cập nhật CSDL");
+//        menu.add("Lưu", QuanLyMuonSach::ghiVaoCSDL);
+//        menu.add("Đọc", QuanLyMuonSach::doctuCSDL);
 
-            }
-        } while (luachon != 7);
+        menu.show();
+
+
+//        sc = new Scanner(System.in);
+//        int luachon;
+//        do {
+//            System.out.println("Quản Lý Sách----------------");
+//            System.out.println("\tChức năng\t");
+//            System.out.println("1.In tất cả các sách");
+//            System.out.println("2.Thống kê");
+//            System.out.println("3.Thêm sách vào ArrayList");
+//            System.out.println("4.Xóa Sách");
+//            System.out.println("5.Sửa đổi thông tin sách");
+//            System.out.println("6.Tìm kiếm sách");
+//            System.out.println("7.Thoát");
+//            System.out.println("\tCập nhật CSDL\t");
+//            System.out.println("8.Đọc CSDL vào ArrayList");
+//            System.out.println("9.Ghi mới từ ArrayList vào CSDL");
+//            System.out.println("----------------------------");
+//            luachon = Integer.parseInt(sc.nextLine());
+//
+//            switch (luachon) {
+//                case 1:
+//                    danhSach.inDanhSach();
+//                    break;
+//                case 2:
+//                    danhSach.thongKe();
+//                    break;
+//                case 3:
+//                    danhSach.themSach();
+//                    break;
+//                case 4:
+//                    danhSach.xoaSach();
+//                    break;
+//                case 5:
+//                    danhSach.suaThongTinSach();
+//                    break;
+//                case 6:
+//                    danhSach.timKiem();
+//                    break;
+//                case 8:
+//                    danhSach.doctuCSDL();
+//                    break;
+//                case 9:
+//                    danhSach.ghiVaoCSDL();
+//                    break;
+//
+//            }
+//        } while (luachon != 7);
     }
     public void themSach() throws CloneNotSupportedException {
         Scanner sc  = new Scanner(System.in);
@@ -105,6 +126,8 @@ public class QuanLySach {
             sach.setTenTacGia(sc.nextLine());
             System.out.print("Năm xuất bản: ");
             sach.setNxb(Integer.parseInt(sc.nextLine()));
+            System.out.println("Độ tuổi cho phép: ");
+            sach.setDoTuoi(Integer.parseInt(sc.nextLine()));
             System.out.print("Số Lượng: ");
             sach.setSoLuongMoiCuon(Integer.parseInt(sc.nextLine()));
             if(sach instanceof SachVHNT) {
@@ -126,30 +149,30 @@ public class QuanLySach {
             sach.setSoLuong(sach.getSoLuong() + sach.getSoLuongMoiCuon());
             sach.setSoLuong1(sach.getSoLuong());
             System.out.println();
-            this.listSach.add(sach);
+            listSach.add(sach);
         }
 
     }
 
     public void thongKe() {
         System.out.println("\t\t-------------Thống Kê-------------\t\t");
-        System.out.printf("%-10s%-45s%-30s%-30s%-20s%-10s\n","Mã sách","Tên sách","Thể loại","Tên tác giả","Năm xuất bản","Số lượng");
+        System.out.printf("%-10s%-45s%-30s%-30s%-20s%-20s%-10s\n","Mã sách","Tên sách","Thể loại","Tên tác giả","Năm xuất bản","Độ tuổi","Số lượng");
         for (Sach sach : listSach) {
             if (sach instanceof SachVHNT) {
-                System.out.printf("%-10s%-45s%-30s%-30s%-20d%-10d\n",sach.getMaSach(),sach.getTenSach(),((SachVHNT)sach).getLoai()
-                        ,sach.getTenTacGia(),sach.getNxb(),sach.getSoLuongMoiCuon());
+                System.out.printf("%-10s%-45s%-30s%-30s%-20d%-20d%-10d\n",sach.getMaSach(),sach.getTenSach(),((SachVHNT)sach).getLoai()
+                        ,sach.getTenTacGia(),sach.getNxb(),sach.getDoTuoi(),sach.getSoLuongMoiCuon());
             }
             else if (sach instanceof SachTT) {
-                System.out.printf("%-10s%-45s%-30s%-30s%-20d%-10d\n",sach.getMaSach(),sach.getTenSach(),((SachTT)sach).getLoai()
-                        ,sach.getTenTacGia(),sach.getNxb(),sach.getSoLuongMoiCuon());
+                System.out.printf("%-10s%-45s%-30s%-30s%-20d%-20d%-10d\n",sach.getMaSach(),sach.getTenSach(),((SachTT)sach).getLoai()
+                        ,sach.getTenTacGia(),sach.getNxb(),sach.getDoTuoi(),sach.getSoLuongMoiCuon());
             }
             else if (sach instanceof SachTL) {
-                System.out.printf("%-10s%-45s%-30s%-30s%-20d%-10d\n",sach.getMaSach(),sach.getTenSach(),((SachTL)sach).getLoai()
-                        ,sach.getTenTacGia(),sach.getNxb(),sach.getSoLuongMoiCuon());
+                System.out.printf("%-10s%-45s%-30s%-30s%-20d%-20d%-10d\n",sach.getMaSach(),sach.getTenSach(),((SachTL)sach).getLoai()
+                        ,sach.getTenTacGia(),sach.getNxb(),sach.getDoTuoi(),sach.getSoLuongMoiCuon());
             }
             else {
-                System.out.printf("%-10s%-45s%-30s%-30s%-20d%-10d\n",sach.getMaSach(),sach.getTenSach(),((SachTN)sach).getLoai()
-                        ,sach.getTenTacGia(),sach.getNxb(),sach.getSoLuongMoiCuon());
+                System.out.printf("%-10s%-45s%-30s%-30s%-20d%-20d%-10d\n",sach.getMaSach(),sach.getTenSach(),((SachTN)sach).getLoai()
+                        ,sach.getTenTacGia(),sach.getNxb(),sach.getDoTuoi(),sach.getSoLuongMoiCuon());
             }
 
         }
@@ -173,7 +196,7 @@ public class QuanLySach {
     }
 
     public void ghiVaoCSDL() {
-        File file = new File("./src/Book/Sach.txt");
+        File file = new File("./src/Data/Sach.bin");
         try {
             OutputStream os = new FileOutputStream(file);
             ObjectOutputStream oos = new ObjectOutputStream(os);
@@ -194,11 +217,10 @@ public class QuanLySach {
             InputStream is = new FileInputStream(file);
             ObjectInputStream ois = new ObjectInputStream(is);
             Sach s;
-            while (true){
+            do {
                 s = (Sach) ois.readObject();
-                this.listSach.add(s);
-                if(s == null) break;
-            }
+                listSach.add(s);
+            } while (s != null);
             ois.close();
             is.close();
         } catch (Exception e) {
@@ -305,6 +327,7 @@ public class QuanLySach {
                     System.out.println("3.Thể loại");
                     System.out.println("4.Tên tác giả");
                     System.out.println("5.Năm xuất bản");
+                    System.out.println("6.Độ tuổi cho phép");
                     System.out.println("0.Trở về");
                     System.out.println("------------------------------------");
                     luachon = Integer.parseInt(sc.nextLine());
@@ -335,6 +358,9 @@ public class QuanLySach {
                         case 5:
                             sach.setNxb(Integer.parseInt(sc.nextLine()));
                             break;
+                        case 6:
+                            sach.setDoTuoi(Integer.parseInt(sc.nextLine()));
+                            break;
                     }
                 } while (luachon != 0);
                 break;
@@ -357,7 +383,8 @@ public class QuanLySach {
             System.out.println("2.Tìm theo tên sách");
             System.out.println("3.Tìm theo Thể loại");
             System.out.println("4.Tìm theo tên tác giả");
-            System.out.println("5.Tìm Theo năm xuất bản");
+            System.out.println("5.Tìm theo năm xuất bản");
+            System.out.println("6.Tìm theo độ tuổi cho phép");
             System.out.println("0.trờ về");
             System.out.println("----------------------------");
             luachon = Integer.parseInt(sc.nextLine());
@@ -420,10 +447,32 @@ public class QuanLySach {
                         }
                     }
                     break;
+                case 6:
+                    System.out.println("Nhập độ tuổi: ");
+                    int doTuoi = Integer.parseInt(sc.nextLine());
+                    for (Sach sach : listSach) {
+                        if (sach.getDoTuoi() == doTuoi) {
+                            System.out.println(sach);
+                        }
+                    }
             }
         } while (luachon != 0);
 
 
     }
 
+    @Override
+    public void generateMenu() {
+
+    }
+
+    @Override
+    public void save() {
+
+    }
+
+    @Override
+    public void load() {
+
+    }
 }

@@ -11,6 +11,7 @@ public abstract class Sach implements Serializable,Cloneable {
     private static int soLuong;
     private int soLuong1;
 
+    private int doTuoi;
     public Sach() {
     }
 
@@ -92,5 +93,13 @@ public abstract class Sach implements Serializable,Cloneable {
 
     public void setSoLuong1(int soLuong1) {
         this.soLuong1 = soLuong1;
+    }
+
+    public int getDoTuoi() {
+        return doTuoi;
+    }
+
+    public void setDoTuoi(int doTuoi) {
+        this.doTuoi = doTuoi;
     }
 }
