@@ -3,6 +3,7 @@ package General.Input;
 import java.util.Scanner;
 
 public class NString extends NInstance<String> {
+
     public NString() {
         super();
     }

@@ -1,8 +1,8 @@
 package Book;
 
 public class PhieuMuonSach {
-    private KhachHang kh;
-    private NhanVien nv;
+    private Customer kh;
+    private Staff nv;
     private Sach sach;
     private String ngayMuon;
     private String ngayTra;
@@ -10,7 +10,7 @@ public class PhieuMuonSach {
     public PhieuMuonSach() {
     }
 
-    public PhieuMuonSach(KhachHang kh, NhanVien nv, Sach sach, String ngayMuon, String ngayTra) {
+    public PhieuMuonSach(Customer kh, Staff nv, Sach sach, String ngayMuon, String ngayTra) {
         this.kh = kh;
         this.nv = nv;
         this.sach = sach;
@@ -18,19 +18,19 @@ public class PhieuMuonSach {
         this.ngayTra = ngayTra;
     }
 
-    public KhachHang getKh() {
+    public Customer getKh() {
         return kh;
     }
 
-    public void setKh(KhachHang kh) {
+    public void setKh(Customer kh) {
         this.kh = kh;
     }
 
-    public NhanVien getNv() {
+    public Staff getNv() {
         return nv;
     }
 
-    public void setNv(NhanVien nv) {
+    public void setNv(Staff nv) {
         this.nv = nv;
     }
 
