@@ -1,42 +1,41 @@
 package Book;
 
 import General.Menu.RunnableMenu;
+import User.Errors.UsernameExistException;
+
+import javax.swing.text.Style;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class main {
-    public static void main(String[] args) throws CloneNotSupportedException {
-
+    public static void main(String[] args) throws CloneNotSupportedException, UsernameExistException {
+        khoiTaoCustomer();
+        khoiTaoStaff();
         RunnableMenu menu = new RunnableMenu("MENU");
-        QuanLySach qlSach = new QuanLySach();
-
-        menu.add("Quan ly Sach Toàn Thu Viện", ()->qlSach.menuQuanLySach(qlSach));
+        menu.add("Quan ly Sach Toàn Thu Viện", QuanLySach::menuQuanLySach);
         menu.add("Quan ly Sách Mượn", QuanLyMuonSach::menuQuanLyMuonSach);
-        menu.add("Quan ly Sach hien co", ()->{});
-
+        menu.add("Quan ly Sach hien co", QuanLySachHienCo::menuQuanLySachHienCo);
         menu.show();
-
-//        Scanner sc = new Scanner(System.in);
-////        QuanLyMuonSach qlmSach = new QuanLyMuonSach();
-//        int luachon;
-//        do {
-//            System.out.println("MENU------------------");
-//            System.out.println("1.Quản Lý Sách Toàn Thư Viện");
-//            System.out.println("2.Quản Lý Sách Mượn");
-//            System.out.println("3.Quản Lý Sách hiện có");
-//            System.out.println("4.Thoát");
-//            System.out.println("----------------------");
-//            luachon = Integer.parseInt(sc.nextLine());
-//            switch (luachon) {
-//                case 1:
-//                    qlSach.menuQuanLySach(qlSach);
-//                    break;
-//                case 2:
-//                    QuanLyMuonSach.menuQuanLyMuonSach();
-//                    break;
-//                case 3: break;
-//            }
-//        } while(luachon != 4);
-//        qlSach.menuQuanLySach(qlSach);
     }
-
+    public static void khoiTaoCustomer() throws UsernameExistException {
+        Scanner sc = new Scanner(System.in);
+        ListCustomer.listCustomer = new ArrayList<>();
+        Customer customer1 = new Customer("123","Nguyễn Hoàng Tiến",19,"tiennguyen","1702");
+        Customer customer2 = new Customer("456","Trần Gia Hân",23,"han19","1053");
+        Customer customer3 = new Customer("789","Ngô Hoàng Tín",16,"tin68","4867");
+        ListCustomer.listCustomer.add(customer1);
+        ListCustomer.listCustomer.add(customer2);
+        ListCustomer.listCustomer.add(customer3);
+    }
+    public static void khoiTaoStaff() throws UsernameExistException {
+        Scanner sc = new Scanner(System.in);
+        ListStaff.listStaff = new ArrayList<>() ;
+        Staff staff1 = new Staff("nv1","Phạm Minh Nhựt",25,"tiennguyen","1702");
+        Staff staff2 = new Staff("nv2","Phan Ngọc Tuấn",30,"tiennguyen","1702");
+        Staff staff3 = new Staff("nv3","Võ Tấn Phát",28,"tiennguyen","1702");
+        ListStaff.listStaff.add(staff1);
+        ListStaff.listStaff.add(staff2);
+        ListStaff.listStaff.add(staff3);
+    }
 }

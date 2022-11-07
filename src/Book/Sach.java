@@ -12,15 +12,20 @@ public abstract class Sach implements Serializable,Cloneable {
     private int soLuong1;
 
     private int doTuoi;
+    private boolean duocMuon;
+    private int soSachMuon;
     public Sach() {
     }
 
-    public Sach(String maSach, String tenSach, String tenTacGia, int nxb, int soLuongMoiCuon) {
+    public Sach(String maSach, String tenSach, String tenTacGia, int nxb, int soLuongMoiCuon, int doTuoi, boolean duocMuon, int soSachMuon) {
         this.maSach = maSach;
         this.tenSach = tenSach;
         this.tenTacGia = tenTacGia;
         this.nxb = nxb;
         this.soLuongMoiCuon = soLuongMoiCuon;
+        this.doTuoi = doTuoi;
+        this.duocMuon = duocMuon;
+        this.soSachMuon = soSachMuon;
     }
 
     public Object clone() throws CloneNotSupportedException {
@@ -82,10 +87,9 @@ public abstract class Sach implements Serializable,Cloneable {
                 ", tenSach='" + tenSach + '\'' +
                 ", tenTacGia='" + tenTacGia + '\'' +
                 ", nxb=" + nxb +
-                ", soLuong=" + soLuongMoiCuon;
+                ", doTuoi=" + doTuoi +
+                ", soLuongMoiCuon=" + soLuongMoiCuon;
     }
-
-
 
     public int getSoLuong1() {
         return soLuong1;
@@ -101,5 +105,22 @@ public abstract class Sach implements Serializable,Cloneable {
 
     public void setDoTuoi(int doTuoi) {
         this.doTuoi = doTuoi;
+    }
+
+    public boolean isDuocMuon() {
+        return duocMuon;
+    }
+
+    public void setDuocMuon(boolean duocMuon) {
+        this.duocMuon = duocMuon;
+    }
+
+
+    public int getSoSachMuon() {
+        return soSachMuon;
+    }
+
+    public void setSoSachMuon(int soSachMuon) {
+        this.soSachMuon = soSachMuon;
     }
 }

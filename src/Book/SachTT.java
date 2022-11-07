@@ -14,8 +14,8 @@ public class SachTT extends  Sach{
 
     }
 
-    public SachTT(String maSach, String tenSach, String tenTacGia, int nxb, int soLuongMoiCuon) {
-        super(maSach, tenSach, tenTacGia, nxb, soLuongMoiCuon);
+    public SachTT(String maSach, String tenSach, String tenTacGia, int nxb, int soLuongMoiCuon, int doTuoi, boolean duocMuon, int soSachMuon) {
+        super(maSach, tenSach, tenTacGia, nxb, soLuongMoiCuon, doTuoi, duocMuon, soSachMuon);
     }
 
     public int getSlTungLoai() {

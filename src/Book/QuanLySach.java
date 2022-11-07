@@ -9,82 +9,29 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class QuanLySach {
-    private Scanner sc;
-    private static ArrayList<Sach> listSach;
 
-    public QuanLySach() {
-        listSach = new ArrayList<Sach>();
-    }
+    public static ArrayList<Sach> listSach = new ArrayList<>();
 
-    public QuanLySach(ArrayList<Sach> listSach) {
-        listSach = listSach;
-    }
-    public void menuQuanLySach(QuanLySach danhSach) throws CloneNotSupportedException {
+
+    public static void menuQuanLySach() throws CloneNotSupportedException {
         RunnableMenu menu = new RunnableMenu("Quản Lý Sách");
 
-//        menu.addSection("Chức năng");
-//        menu.add("In ra danh sách mượn sách", QuanLySach::inDanhSach);
-//        menu.add("Thêm mượn sách", );
-//        menu.add("Thống kê sách mượn", QuanLyMuonSach::thongKe);
-//        menu.add("Trả sách", QuanLyMuonSach::traSach);
-//        menu.add("Sửa đổi thông tin mượn", QuanLyMuonSach::suaThongTinSachMuon);
-//        menu.add("Tìm kiếm sách mượn", QuanLyMuonSach::timKiem);
-//
-//        menu.addSection("Cập nhật CSDL");
-//        menu.add("Lưu", QuanLyMuonSach::ghiVaoCSDL);
-//        menu.add("Đọc", QuanLyMuonSach::doctuCSDL);
+        menu.addSection("Chức năng");
+        menu.add("In tất cả các sách", QuanLySach::inDanhSach);
+        menu.add("Thống kê", QuanLySach::thongKe);
+        menu.add("Thêm sách", QuanLySach::themSach);
+        menu.add("Xóa sách", QuanLySach::xoaSach);
+        menu.add("Sửa đổi thông tin sách", QuanLySach::suaThongTinSach);
+        menu.add("Tìm kiếm sách", QuanLySach::timKiem);
+
+        menu.addSection("Cập nhật CSDL");
+        menu.add("Lưu", QuanLySach::ghiVaoCSDL);
+        menu.add("Đọc", QuanLySach::doctuCSDL);
 
         menu.show();
 
-
-//        sc = new Scanner(System.in);
-//        int luachon;
-//        do {
-//            System.out.println("Quản Lý Sách----------------");
-//            System.out.println("\tChức năng\t");
-//            System.out.println("1.In tất cả các sách");
-//            System.out.println("2.Thống kê");
-//            System.out.println("3.Thêm sách vào ArrayList");
-//            System.out.println("4.Xóa Sách");
-//            System.out.println("5.Sửa đổi thông tin sách");
-//            System.out.println("6.Tìm kiếm sách");
-//            System.out.println("7.Thoát");
-//            System.out.println("\tCập nhật CSDL\t");
-//            System.out.println("8.Đọc CSDL vào ArrayList");
-//            System.out.println("9.Ghi mới từ ArrayList vào CSDL");
-//            System.out.println("----------------------------");
-//            luachon = Integer.parseInt(sc.nextLine());
-//
-//            switch (luachon) {
-//                case 1:
-//                    danhSach.inDanhSach();
-//                    break;
-//                case 2:
-//                    danhSach.thongKe();
-//                    break;
-//                case 3:
-//                    danhSach.themSach();
-//                    break;
-//                case 4:
-//                    danhSach.xoaSach();
-//                    break;
-//                case 5:
-//                    danhSach.suaThongTinSach();
-//                    break;
-//                case 6:
-//                    danhSach.timKiem();
-//                    break;
-//                case 8:
-//                    danhSach.doctuCSDL();
-//                    break;
-//                case 9:
-//                    danhSach.ghiVaoCSDL();
-//                    break;
-//
-//            }
-//        } while (luachon != 7);
     }
-    public void themSach() throws CloneNotSupportedException {
+    public static void themSach() throws CloneNotSupportedException {
         Scanner sc  = new Scanner(System.in);
         System.out.print("Thêm bao nhiêu sách: ");
         int n = Integer.parseInt(sc.nextLine());
@@ -126,10 +73,12 @@ public class QuanLySach {
             sach.setTenTacGia(sc.nextLine());
             System.out.print("Năm xuất bản: ");
             sach.setNxb(Integer.parseInt(sc.nextLine()));
-            System.out.println("Độ tuổi cho phép: ");
+            System.out.print("Độ tuổi cho phép: ");
             sach.setDoTuoi(Integer.parseInt(sc.nextLine()));
             System.out.print("Số Lượng: ");
             sach.setSoLuongMoiCuon(Integer.parseInt(sc.nextLine()));
+            sach.setDuocMuon(false);
+            sach.setSoSachMuon(0);
             if(sach instanceof SachVHNT) {
                 ((SachVHNT) sach).setSlTungLoai( ((SachVHNT) sach).getSlTungLoai() + sach.getSoLuongMoiCuon() );
                 ((SachVHNT) sach).setSlTungLoai1(((SachVHNT) sach).getSlTungLoai());
@@ -154,7 +103,7 @@ public class QuanLySach {
 
     }
 
-    public void thongKe() {
+    public static void thongKe() {
         System.out.println("\t\t-------------Thống Kê-------------\t\t");
         System.out.printf("%-10s%-45s%-30s%-30s%-20s%-20s%-10s\n","Mã sách","Tên sách","Thể loại","Tên tác giả","Năm xuất bản","Độ tuổi","Số lượng");
         for (Sach sach : listSach) {
@@ -195,7 +144,7 @@ public class QuanLySach {
 
     }
 
-    public void ghiVaoCSDL() {
+    public static void ghiVaoCSDL() {
         File file = new File("./src/Data/Sach.bin");
         try {
             OutputStream os = new FileOutputStream(file);
@@ -211,8 +160,8 @@ public class QuanLySach {
             e.printStackTrace();
         }
     }
-    public void doctuCSDL() {
-        File file = new File("./src/Book/Sach.txt");
+    public static void doctuCSDL() {
+        File file = new File("./src/Data/Sach.bin");
         try {
             InputStream is = new FileInputStream(file);
             ObjectInputStream ois = new ObjectInputStream(is);
@@ -250,15 +199,17 @@ public class QuanLySach {
                 ((SachTN) sach).setSlTungLoai(((SachTN) sach).getSlTungLoai1());
             }
         }
+
     }
 
-    public void inDanhSach() {
+    public static void inDanhSach() {
         for (Sach sach : listSach) {
             System.out.println(sach);
         }
     }
 
-    public void xoaSach() {
+    public static void xoaSach() {
+        Scanner sc = new Scanner(System.in);
         System.out.println("Nhập vào mã sách muốn xóa: ");
         String maSach = sc.nextLine();
         boolean kt = false;
@@ -298,7 +249,7 @@ public class QuanLySach {
                     else {
                         ((SachTN) sach).setSlTungLoai(((SachTN) sach).getSlTungLoai() - luachon);
                     }
-                    this.listSach.remove(sach);
+                    listSach.remove(sach);
                 }
                 kt = true;
                 break;
@@ -312,7 +263,8 @@ public class QuanLySach {
         }
     }
 
-    public void suaThongTinSach() {
+    public static void suaThongTinSach() {
+        Scanner sc  = new Scanner(System.in);
         System.out.println("Nhập vào mã sách muốn sửa: ");
         String maSach = sc.nextLine();
         int luachon;
@@ -366,7 +318,7 @@ public class QuanLySach {
                 break;
             }
         }
-        if (kt == true) {
+        if (kt) {
             System.out.println("Sửa đổi thành công!");
         }
         else {
@@ -374,7 +326,8 @@ public class QuanLySach {
         }
     }
 
-    public void timKiem() {
+    public static void timKiem() {
+        Scanner sc  = new Scanner(System.in);
         int luachon;
 
         do {
@@ -455,24 +408,10 @@ public class QuanLySach {
                             System.out.println(sach);
                         }
                     }
+                    break;
             }
         } while (luachon != 0);
 
-
-    }
-
-    @Override
-    public void generateMenu() {
-
-    }
-
-    @Override
-    public void save() {
-
-    }
-
-    @Override
-    public void load() {
 
     }
 }
