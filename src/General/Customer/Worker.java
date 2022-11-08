@@ -43,4 +43,16 @@ public class Worker extends Customer{
     public static void setType(String type) {
         Worker.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "Worker{" +
+                "id='" + super.getId() + '\'' +
+                ", name='" + super.getName() + '\'' +
+                ", address=" + super.getAddress() +
+                ", phone='" + super.getPhone() + '\'' +
+                ", birthday=" + super.getBirthday().toString() +'\'' +
+                ", workPlace='" + workPlace +
+                "'}";
+    }
 }

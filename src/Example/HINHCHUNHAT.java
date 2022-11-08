@@ -9,7 +9,7 @@ public class HINHCHUNHAT implements IMenu {
     double width;
 
     final NDouble heightInput = new NDouble("Height");
-    final NDouble widthInput = new NDouble("Width");
+    final NDouble widthInput = new NDouble("Wacswqidth");
 
     public HINHCHUNHAT() {
     }

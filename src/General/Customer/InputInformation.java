@@ -75,7 +75,7 @@ public class InputInformation implements Serializable {
 
     //input phone number
     public String inputPhoneNumber(){
-        System.out.print("Nhập số điện thoại: ");
+        System.out.print("Số điện thoại: ");
         String phone = sc.nextLine();
 
         while (true){
@@ -87,20 +87,20 @@ public class InputInformation implements Serializable {
         }
         return phone;
     }
-    //input email address
-    public String inputEmail(){
-        System.out.print("Nhập email: ");
-        String email = sc.nextLine();
-
-        while (true){
-            if(!Pattern.matches(".*\\w@gmail.com",email)){
-                System.out.print("Email không hợp lệ! Nhập lại: ");
-                email = sc.nextLine();
-            }
-            else break;
-        }
-        return email;
-    }
+//    //input email address
+//    public String inputEmail(){
+//        System.out.print("Nhập email: ");
+//        String email = sc.nextLine();
+//
+//        while (true){
+//            if(!Pattern.matches(".*\\w@gmail.com",email)){
+//                System.out.print("Email không hợp lệ! Nhập lại: ");
+//                email = sc.nextLine();
+//            }
+//            else break;
+//        }
+//        return email;
+//    }
     //input address
     public Address inputAddress(){
         Address address = new Address();
@@ -130,8 +130,15 @@ public class InputInformation implements Serializable {
     }
     public String inputCustomerID(){
         String id = "";
-        System.out.print("Nhập ID khách hàng(vd:HS001): ");
+        System.out.print("Nhập ID khách hàng(vd:ST001, WR001): ");
         id = sc.nextLine();
+        while (true){
+            if(!Pattern.matches("ST\\d{3}|WR\\d{3}",id)){
+                System.out.print("ID không hợp lệ! Nhập lại: ");
+                id = sc.nextLine();
+            }
+            else break;
+        }
         return id;
     }
     //check leap year

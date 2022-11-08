@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 public class Address implements Serializable {
     //Attribute
-    Scanner sc = new Scanner(System.in);
     private String houseNumber;
     private String street;
     private String ward;

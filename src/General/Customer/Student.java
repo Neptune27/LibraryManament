@@ -43,7 +43,15 @@ public class Student extends Customer{
         Student.type = type;
     }
 
-
-
-
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id='" + super.getId() + '\'' +
+                ", name='" + super.getName() + '\'' +
+                ", address=" + super.getAddress() +
+                ", phone='" + super.getPhone() + '\'' +
+                ", birthday=" + super.getBirthday().toString() +'\'' +
+                ", school='" + school +
+                "'}";
+    }
 }
