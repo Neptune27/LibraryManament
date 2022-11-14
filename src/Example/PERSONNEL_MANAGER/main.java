@@ -52,7 +52,7 @@ public class main {
                 case 2://thu ki
                     if(quanLi.getDanhSachTK().dangnhap(  quanLi.getDanhSachTK().getListAccounts(),"Thu ki")) {
                         thuKi.menu(quanLi.getDanhSachNV(), quanLi.getDanhSachTK().getListAccounts(),
-                                quanLi.getDanhSachTKKH().getListAccounts(),  quanLi.getDanhSachTK().getLuuTenDangNhap());
+                                quanLi.getDanhSachTKKH().getListAccounts(),  quanLi.getDanhSachTK().getSaveMaNV());
                     }
                     else {
                         System.out.println("ERROR SIGN IN");
@@ -62,7 +62,7 @@ public class main {
                     break;
                 case 3://PV
                     if( quanLi.getDanhSachTK().dangnhap( quanLi.getDanhSachTK().getListAccounts(),"Phuc vu"))
-                        nhanVien.menu(quanLi.getDanhSachNV(), quanLi.getDanhSachTK().getLuuTenDangNhap());
+                        nhanVien.menu(quanLi.getDanhSachNV(), quanLi.getDanhSachTK().getSaveMaNV());
                     else {
                         System.out.println("ERROR SIGN IN");
                         System.out.printf("\nEnter to continue...");

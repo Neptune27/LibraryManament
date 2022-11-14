@@ -12,10 +12,10 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
     public static User user = new User();
 
 
-
     String[] mangCV = {"Phuc vu", "Thu ki", "Quan li"};
     String[] mangGT = {"Nam", "Nu", "Khac"};
     String[] mangBuoiLam = {"Lam buoi sang", "Lam buoi chieu", "Lam ca 2 buoi"};
+
     public QuanLi() {
     }
 
@@ -50,6 +50,7 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
     public ArrayList<NhanVien> getDanhSachNV() {
         return danhSachNV;
     }
+
     public int getTongNV() {
         return tongNV;
     }
@@ -123,7 +124,7 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
             while (true) {
                 nhanVien = (NhanVien) ois.readObject();
                 this.danhSachNV.add(nhanVien);
-                if (nhanVien == null ) break;
+                if (nhanVien == null) break;
             }
             ois.close();
             is.close();
@@ -133,7 +134,7 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
     }
 
     public boolean TimKiemNV(String maNV) {
-        for (int i=0; i<danhSachNV.size();i++) {
+        for (int i = 0; i < danhSachNV.size(); i++) {
             if (maNV.equalsIgnoreCase(danhSachNV.get(i).getMaNV())) {
                 return true;
             }
@@ -152,7 +153,7 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
     }
 
     public boolean XoaNV(String maNVien) {
-        for (int i=0; i<danhSachNV.size();i++) {
+        for (int i = 0; i < danhSachNV.size(); i++) {
             if (maNVien.equalsIgnoreCase(danhSachNV.get(i).getMaNV())) {
                 danhSachNV.remove(i);
                 return true;
@@ -184,7 +185,7 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
                         System.out.printf("Nhap value: ");
                         chon[1] = scInt.nextInt();
                         for (int i = 0; i < danhSachNV.size(); i++) {
-                            if (maNV.equalsIgnoreCase( danhSachNV.get(i).getMaNV())) {
+                            if (maNV.equalsIgnoreCase(danhSachNV.get(i).getMaNV())) {
                                 danhSachNV.get(i).setChucVu(mangCV[chon[1] - 1]);
                                 break;
                             }
@@ -193,7 +194,7 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
                     case 2:
                         System.out.printf("Nhap Ho Ten : ");
                         for (int i = 0; i < danhSachNV.size(); i++) {
-                            if (maNV.equalsIgnoreCase( danhSachNV.get(i).getMaNV())) {
+                            if (maNV.equalsIgnoreCase(danhSachNV.get(i).getMaNV())) {
                                 danhSachNV.get(i).setHoTen(scText.nextLine());
                                 break;
                             }
@@ -204,7 +205,7 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
                         System.out.printf("Nhap value: ");
                         chon[3] = scInt.nextInt();
                         for (int i = 0; i < danhSachNV.size(); i++) {
-                            if (maNV.equalsIgnoreCase( danhSachNV.get(i).getMaNV())) {
+                            if (maNV.equalsIgnoreCase(danhSachNV.get(i).getMaNV())) {
                                 danhSachNV.get(i).setGioiTinh(mangGT[chon[3] - 1]);
                                 break;
                             }
@@ -213,7 +214,7 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
                     case 4:
                         System.out.printf("Nhap tuoi : ");
                         for (int i = 0; i < danhSachNV.size(); i++) {
-                            if (maNV.equalsIgnoreCase( danhSachNV.get(i).getMaNV())) {
+                            if (maNV.equalsIgnoreCase(danhSachNV.get(i).getMaNV())) {
                                 danhSachNV.get(i).setTuoi(scInt.nextInt());
                                 break;
                             }
@@ -224,7 +225,7 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
                         DiaChi dc = new DiaChi();
                         dc.nhap();
                         for (int i = 0; i < danhSachNV.size(); i++) {
-                            if (maNV.equalsIgnoreCase( danhSachNV.get(i).getMaNV())) {
+                            if (maNV.equalsIgnoreCase(danhSachNV.get(i).getMaNV())) {
                                 danhSachNV.get(i).setDiaChi(dc);
                                 break;
                             }
@@ -232,7 +233,7 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
                         break;
                     case 6:
                         for (int i = 0; i < danhSachNV.size(); i++) {
-                            if (maNV.equalsIgnoreCase( danhSachNV.get(i).getMaNV())) {
+                            if (maNV.equalsIgnoreCase(danhSachNV.get(i).getMaNV())) {
                                 System.out.printf("Nhap so dien thoai (gom 10 so)");
                                 danhSachNV.get(i).setSoDt(scText.nextLine());
                                 break;
@@ -241,7 +242,7 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
                         break;
                     case 7:
                         for (int i = 0; i < danhSachNV.size(); i++) {
-                            if (maNV.equalsIgnoreCase( danhSachNV.get(i).getMaNV())) {
+                            if (maNV.equalsIgnoreCase(danhSachNV.get(i).getMaNV())) {
                                 System.out.printf("Nhap so ngay nghi can chinh: ");
                                 danhSachNV.get(i).setSoNgayNghi(Float.parseFloat(scText.nextLine()));
                                 break;
@@ -252,7 +253,7 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
                         System.out.printf("Nhap value: ");
                         chon[8] = scInt.nextInt();
                         for (int i = 0; i < danhSachNV.size(); i++) {
-                            if (maNV.equalsIgnoreCase( danhSachNV.get(i).getMaNV())) {
+                            if (maNV.equalsIgnoreCase(danhSachNV.get(i).getMaNV())) {
                                 danhSachNV.get(i).setCaLam(mangBuoiLam[chon[8] - 1]);
                                 break;
                             }
@@ -300,7 +301,7 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
                     System.out.println("|                                                           THONG TIN NHAN VIEN                                                         |");
                     System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------");
                     System.out.format("|%-10s|%-10s|%-18s|%-5s|%-10s|%-20s|%-15s|%-10s|%-15s|%-13s|\n",
-                                    "Chuc vu","Ma NV","Ho Ten","Tuoi","Gioi tinh","Dia chi","SDT","Xep loai","Ca lam","So ngay nghi");
+                            "Chuc vu", "Ma NV", "Ho Ten", "Tuoi", "Gioi tinh", "Dia chi", "SDT", "Xep loai", "Ca lam", "So ngay nghi");
                     System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------");
                     for (NhanVien i : danhSachNV)
                         i.xuat();
@@ -311,7 +312,7 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
                     System.out.println("|                            LUONG NHAN VIEN                              |");
                     System.out.println("---------------------------------------------------------------------------");
                     System.out.format("|%-10s|%-10s|%-18s|%-10s|%-10s|%-10s|\n",
-                            "Chuc vu","Ma NV","Ho Ten","Luong","Thuong","Tong Luong");
+                            "Chuc vu", "Ma NV", "Ho Ten", "Luong", "Thuong", "Tong Luong");
                     System.out.println("---------------------------------------------------------------------------");
                     for (NhanVien i : danhSachNV)
                         i.xuatLuong();
@@ -324,12 +325,12 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
                     //SL khach hang muon sach
                     break;
                 case 5:
-                    user.nhapUser(user.getDanhsachKH(),danhSachNV);
+                    user.nhapUser(user.getDanhsachKH(), danhSachNV);
                     Account accKH = new Account();
-                    accKH.taoTaiKhoan(danhSachTKKH.getListAccounts(),danhSachTK.getListAccounts(), user.getMaUser(), "Khanh hang");
+                    accKH.taoTaiKhoan(danhSachTKKH.getListAccounts(), danhSachTK.getListAccounts(), user.getMaUser(), "Khanh hang");
                     break;
                 case 6:
-                    Scanner sc= new Scanner(System.in);
+                    Scanner sc = new Scanner(System.in);
                     System.out.print("Nhap ma nhan vien can tim kiem: ");
                     String maNhV = sc.nextLine();
                     int tmp = -1;
@@ -345,20 +346,20 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
                 case 7:
                     NhanVien nv = new NhanVien();
                     Account tk = new Account();
-                    if(!nv.nhap(danhSachNV)) {
+                    if (!nv.nhap(danhSachNV)) {
                         nv.nhapListNULL(danhSachNV);
                     }
-                    tk.taoTaiKhoan(danhSachTK.getListAccounts(),danhSachTKKH.getListAccounts(),nv.getMaNV(),nv.getChucVu());
-                    if(ThemNV(nv))
+                    tk.taoTaiKhoan(danhSachTK.getListAccounts(), danhSachTKKH.getListAccounts(), nv.getMaNV(), nv.getChucVu());
+                    if (ThemNV(nv))
                         danhSachTK.ThemTK(tk);
                     break;
                 case 8://xoa
                     System.out.print("Nhap ma nhan vien can xoa: ");
                     String maNVxoa = scText.nextLine();
-                    if(danhSachNV.isEmpty())
+                    if (danhSachNV.isEmpty())
                         System.out.println("Danh sach hien tai dang rong");
                     else if (TimKiemNV(maNVxoa)) {
-                        for (int i=0; i<danhSachNV.size();i++) {
+                        for (int i = 0; i < danhSachNV.size(); i++) {
                             if (maNVxoa.equalsIgnoreCase(danhSachNV.get(i).getMaNV())) {
                                 danhSachNV.remove(danhSachNV.get(i));
                                 danhSachTK.XoaTK(danhSachTK.getListAccounts().get(i));
@@ -366,8 +367,7 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
                             }
                         }
 
-                    }
-                    else
+                    } else
                         System.out.print("Khong co nhan vien nay ton tai...");
                     break;
                 case 9:
@@ -385,7 +385,7 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
                     System.out.println("|                        TAI KHOAN                    |");
                     System.out.println("-------------------------------------------------------");
                     System.out.format("|%-10s|%-10s|%-15s|%-15s|\n",
-                            "Key","Ma NV","Ten dang nhap","Mat khau");
+                            "Key", "Ma NV", "Ten dang nhap", "Mat khau");
                     System.out.println("-------------------------------------------------------");
                     for (Account i : danhSachTK.getListAccounts())
                         i.xuat();
@@ -403,46 +403,4 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
         } while (luachon != 0);
 
     }
-
-//    public String MenuChonDonVi() {
-//        Scanner sc = new Scanner(System.in);
-//        bangChon();
-//        System.out.printf("Nhap value: ");
-//        int chon = sc.nextInt();
-//        if (chon == 1) {
-//            bangChucVu();
-//            System.out.print("Nhap value: ");
-//            int temp = sc.nextInt();
-//            switch (temp) {
-//                case 1:
-//                    return "Phuc vu";
-//                case 2:
-//                    return "Thu ki";
-//                case 3:
-//                    return "Quan li";
-//            }
-//        } else if (chon == 2) {
-//            return "Khach hang";
-//        }
-//        return "";
-//    }
-
-//    public void GiaoDienNV() {
-//        boolean test = true;
-//        while (test) {
-//            switch (MenuChonDonVi()) {
-//                case "Phuc vu":
-//                    break;
-//                case "Thu ki":
-//                    break;
-//                case "Quan li":
-//
-//                    break;
-//                default:
-//                    test = false;
-//                    break;
-//            }
-//            sc.nextLine();
-//        }
-//    }
 }

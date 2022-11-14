@@ -54,49 +54,71 @@ public class Account implements Serializable {
         return password;
     }
 
-    public void taoTaiKhoan(ArrayList<Account> list, ArrayList<Account> list1, String maNV, String key) {
+    public boolean taoTaiKhoan(ArrayList<Account> list, ArrayList<Account> list1, String maNV, String key) {
         this.maNV = maNV;
         this.key = key;
-        int temp = 0;
+        int i;
         System.out.printf("Nhap ten dang nhap: ");
         account = scText.nextLine();
-        boolean testAD=account.equalsIgnoreCase("admin");
-        while (true) {
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getAccount().equalsIgnoreCase(account) || testAD) {
-                    System.out.println("Ten dang nhap da duoc dung");
-                    System.out.println("Yeu cau nhap lai");
-                    System.out.printf("Nhap lai ten dang nhap: ");
-                    setAccount(scText.nextLine());
-                    i = -1;
-                    temp=0;
-                    continue;
-                }
-                temp++;
-            }
-            if (temp == list.size())
-                break;
+        if (list1.isEmpty()){
+            System.out.printf("Nhap mat khau nguoi dung: ");
+            password = scText.nextLine();
+            if (password==null)
+                return false;
+            return true;
         }
-        temp=0;
-        while (true) {
-            for (int i = 0; i < list1.size(); i++) {
-                if (list1.get(i).getAccount().equalsIgnoreCase(account) || testAD) {
-                    System.out.println("Ten dang nhap da duoc dung");
-                    System.out.println("Yeu cau nhap lai");
-                    System.out.printf("Nhap lai ten dang nhap: ");
-                    setAccount(scText.nextLine());
-                    i = -1;
-                    temp=0;
-                    continue;
-                }
-                temp++;
-            }
-            if (temp == list1.size())
-                break;
+        if (list.isEmpty()){
+            System.out.printf("Nhap mat khau nguoi dung: ");
+            password = scText.nextLine();
+            if (password==null)
+                return false;
+            return true;
         }
 
+        boolean test = false;
+        while (!test) {
+            i=0;
+            for (; i < list.size(); i++) {
+                test = list.get(i).getAccount().equalsIgnoreCase(account) || account.equalsIgnoreCase("admin");
+                if (test) {
+                    System.out.println("Ten dang nhap da duoc dung");
+                    System.out.println("Yeu cau nhap lai");
+                    System.out.printf("Nhap lai ten dang nhap: ");
+                    setAccount(scText.nextLine());
+                    i = -1;
+                    continue;
+                } else
+                    break;
+            }
+            if (test){
+                break;
+            }
+
+        }
+        test=false;
+        i=0;
+        while (!test) {
+            for (; i < list1.size(); i++) {
+                test = list1.get(i).getAccount().equalsIgnoreCase(account) || account.equalsIgnoreCase("admin");
+                if (test) {
+                    System.out.println("Ten dang nhap da duoc dung");
+                    System.out.println("Yeu cau nhap lai");
+                    System.out.printf("Nhap lai ten dang nhap: ");
+                    setAccount(scText.nextLine());
+                    i = -1;
+                    continue;
+                }
+                else break;
+            }
+            if (test) {
+                break;
+            }
+        }
         System.out.printf("Nhap mat khau nguoi dung: ");
         password = scText.nextLine();
+        if (password==null)
+            return false;
+        return true;
     }
 
     public void xuat() {

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class QuanLiTaiKhoan implements Serializable, LuuDocFile {
-    private String luuTenDangNhap;
+    private String saveMaNV;
     private ArrayList<Account> listAccounts = new ArrayList<>();
     Scanner scInt = new Scanner(System.in);
     Scanner scText = new Scanner(System.in);
@@ -28,12 +28,12 @@ public class QuanLiTaiKhoan implements Serializable, LuuDocFile {
 
     }
 
-    public String getLuuTenDangNhap() {
-        return luuTenDangNhap;
+    public String getSaveMaNV() {
+        return saveMaNV;
     }
 
-    public void setLuuTenDangNhap(String luuTenDangNhap) {
-        this.luuTenDangNhap = luuTenDangNhap;
+    public void setSaveMaNV(String saveMaNV) {
+        this.saveMaNV = saveMaNV;
     }
 
     public ArrayList<Account> getListAccounts() {
@@ -121,49 +121,63 @@ public class QuanLiTaiKhoan implements Serializable, LuuDocFile {
         String matKhau;
         if (list.isEmpty())
             return false;
-        int temp=0;
+//        int temp=0;
+        int i=0;
+        boolean test = false;
         System.out.printf("Nhap tai khoan nguoi dung: ");
-        setLuuTenDangNhap(tenDangnhap = scText.nextLine());
-        while (temp != list.size()) {
-            temp=0;
-            for (int i = 0; i < list.size(); i++) {
-                if (!(tenDangnhap.equalsIgnoreCase(list.get(i).getAccount()))) {
-                    nhapsai++;
-                    System.out.println("Sai ten dang nhap hoac ten dang nhap chua ton tai");
-                    System.out.printf("Nhap lai ten dang nhap: ");
-                    setLuuTenDangNhap(tenDangnhap = scText.nextLine());
-                    if (nhapsai==3){
-                        System.out.println("Nhap sai qua nhieu lan...");
-                        nhapsai=0;
-                        return false;
-                    }
-                    continue;
+        tenDangnhap = scText.nextLine();
+        while (!test) {
+            for (; i < list.size(); i++) {
+                test = tenDangnhap.equalsIgnoreCase(list.get(i).getAccount()) && maKey.equalsIgnoreCase(list.get(i).getKey());
+                if (test) {
+                    break;
                 }
-                temp++;
+            }
+            if (test){
+                break;
+            }
+            else {
+                nhapsai++;
+                System.out.println("Sai ten dang nhap hoac ten dang nhap chua ton tai");
+                System.out.printf("Nhap lai ten dang nhap: ");
+                setSaveMaNV(tenDangnhap = scText.nextLine());
+                if (nhapsai==3){
+                    System.out.println("Nhap sai qua nhieu lan...");
+                    nhapsai=0;
+                    return false;
+                }
+                i=0;
+                continue;
             }
         }
-        temp=0;
+        i=0;
+        test = false;
         System.out.printf("Nhap mat khau: ");
         matKhau=scText.nextLine();
-        while (temp != list.size()) {
-            temp=0;
-            for (int i = 0; i < list.size(); i++) {
-                if (!(maKey.equalsIgnoreCase(list.get(i).getKey()) && list.get(i).getAccount().equalsIgnoreCase(tenDangnhap)
-                        && list.get(i).getPassword().equalsIgnoreCase(matKhau))) {
-                    nhapsai++;
-                    System.out.println("Sai mat khau");
-                    System.out.printf("Nhap lai mat khau dang nhap: ");
-                    matKhau = scText.nextLine();
-                    if (nhapsai==3){
-                        System.out.println("Nhap sai qua nhieu lan...");
-                        nhapsai=0;
-                        return false;
-                    }
-                    continue;
+        while (!test) {
+            for (; i < list.size(); i++) {
+                test =(maKey.equalsIgnoreCase(list.get(i).getKey()) && list.get(i).getAccount().equalsIgnoreCase(tenDangnhap)
+                        && list.get(i).getPassword().equalsIgnoreCase(matKhau));
+                if (test) {
+                    setSaveMaNV(list.get(i).getMaNV());
+                    break;
                 }
-                temp++;
             }
-
+            if (test)
+                break;
+            else {
+                nhapsai++;
+                System.out.println("Sai mat khau");
+                System.out.printf("Nhap lai mat khau dang nhap: ");
+                matKhau = scText.nextLine();
+                if (nhapsai==3){
+                    System.out.println("Nhap sai qua nhieu lan...");
+                    nhapsai=0;
+                    return false;
+                }
+                i=0;
+                continue;
+            }
         }
         return true;
     }

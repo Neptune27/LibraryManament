@@ -103,7 +103,7 @@ public class ThuKi extends NhanVien implements Serializable {
         super.xuatLuong();
     }
 
-    public void menu(ArrayList<NhanVien> listNV,ArrayList<Account> listTKNV,ArrayList<Account> listTKKH,String maNV) {
+    public void menu(ArrayList<NhanVien> listNV,ArrayList<Account> listTKNV,ArrayList<Account> listTKKH,String tenDangNhap) {
         int luachon;
         do {
             System.out.println("\n------------Nhan Vien Thu Ki----------------");
@@ -127,7 +127,7 @@ public class ThuKi extends NhanVien implements Serializable {
                             "Chuc vu","Ma NV","Ho Ten","Tuoi","Gioi tinh","Dia chi","SDT","Xep loai","Ca lam","So ngay nghi");
                     System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------");
                     for (NhanVien i : listNV)
-                        if (maNV.equalsIgnoreCase(i.getMaNV())) {
+                        if (tenDangNhap.equalsIgnoreCase(i.getMaNV())) {
                             i.xuat();
                             break;
                         }
@@ -141,7 +141,7 @@ public class ThuKi extends NhanVien implements Serializable {
                             "Chuc vu","Ma NV","Ho Ten","Luong","Thuong","Tong Luong");
                     System.out.println("---------------------------------------------------------------------------");
                     for (NhanVien i : listNV)
-                        if (maNV.equalsIgnoreCase(i.getMaNV())) {
+                        if (tenDangNhap.equalsIgnoreCase(i.getMaNV())) {
                             i.xuatLuong();
                             break;
                         }
