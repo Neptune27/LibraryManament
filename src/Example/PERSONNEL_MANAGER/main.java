@@ -2,6 +2,8 @@ package Example.PERSONNEL_MANAGER;
 
 import java.util.Scanner;
 
+
+//ĐỔi lại chỉ còn chữ đăng nhập mà thôi.
 public class main {
     static void dangNhap() {
         System.out.print("\033[H\033[2J");
@@ -25,6 +27,8 @@ public class main {
         Scanner so = new Scanner(System.in);
         Scanner chu = new Scanner(System.in);
         boolean test = true;
+
+//        TODO Make this only when it not in file.
         //tao tai khoan admin mặc định
         QuanLi quanLi = new QuanLi();
         ThuKi thuKi = new ThuKi();

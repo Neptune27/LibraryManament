@@ -10,7 +10,7 @@ public class Worker extends Customer{
         type = "Công nhân viên";
     }
 
-    public Worker(String id, String name, Address address, String phone, Datetime birthday, String workPlace) {
+    public Worker(String id, String name, Address address, String phone, Date birthday, String workPlace) {
         super(id, name, address, phone, birthday);
         workerAmount ++;
         this.workPlace = workPlace;

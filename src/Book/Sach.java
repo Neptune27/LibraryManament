@@ -2,7 +2,7 @@ package Book;
 
 import java.io.Serializable;
 
-public abstract class Sach implements Serializable,Cloneable {
+public abstract class Sach implements Serializable {
     private String maSach;
     private String tenSach;
     private String tenTacGia;

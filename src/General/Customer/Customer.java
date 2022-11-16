@@ -9,9 +9,9 @@ public abstract class Customer implements Serializable {
     private Address address;
     private static int amount = 0;
     private String phone;
-    private Datetime birthday;
+    private Date birthday;
 
-    public Customer(String id, String name, Address address, String phone,Datetime birthday) {
+    public Customer(String id, String name, Address address, String phone, Date birthday) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -69,11 +69,11 @@ public abstract class Customer implements Serializable {
         this.phone = phone;
     }
 
-    public Datetime getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Datetime birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 

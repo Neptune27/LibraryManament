@@ -24,7 +24,7 @@ public abstract class NInstance<T> {
     }
 
     public NInstance<T> getFromInput() {
-        System.out.print("Nhap " + name + ": ");
+        System.out.print("Nhập " + name + ": ");
         var scanner = new Scanner(System.in);
         try {
             value = scanNext(scanner);

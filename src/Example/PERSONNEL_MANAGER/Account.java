@@ -54,6 +54,7 @@ public class Account implements Serializable {
         return password;
     }
 
+//    WTF
     public void taoTaiKhoan(ArrayList<Account> list, ArrayList<Account> list1, String maNV, String key) {
         this.maNV = maNV;
         this.key = key;

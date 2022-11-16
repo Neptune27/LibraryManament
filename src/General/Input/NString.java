@@ -1,5 +1,6 @@
 package General.Input;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class NString extends NInstance<String> {
@@ -19,6 +20,12 @@ public class NString extends NInstance<String> {
 
     @Override
     protected String scanNext(Scanner scanner) {
-        return scanner.nextLine();
+        var value = scanner.nextLine();
+        if (value.strip().equals("")) {
+            throw new InputMismatchException();
+        }
+        else {
+            return value.strip();
+        }
     }
 }

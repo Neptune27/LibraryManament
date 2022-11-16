@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong {
+public class QuanLi extends NhanVien implements Serializable, LuuDocFile {
     private int tongNV;
     public static ArrayList<NhanVien> danhSachNV = new ArrayList<>();
     public static QuanLiTaiKhoan danhSachTK = new QuanLiTaiKhoan();
@@ -171,6 +171,8 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
         ;
     }
 
+
+//    TODO Refactor this too.
     public boolean suaThongTinNV(String maNV) {
         if (TimKiemNV(maNV)) {
             int chon[] = new int[9];
@@ -268,6 +270,8 @@ public class QuanLi extends NhanVien implements Serializable, LuuDocFile, Luong 
         }
     }
 
+
+//    TODO Refactor me.
     public void menu() {
         int luachon;
         do {

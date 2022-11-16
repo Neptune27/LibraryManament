@@ -9,7 +9,7 @@ public class Student extends Customer{
         type = "Học sinh/ sinh viên";
     }
 
-    public Student(String id, String name,Address address, String phone,Datetime birthday, String school) {
+    public Student(String id, String name, Address address, String phone, Date birthday, String school) {
         super(id, name, address, phone, birthday);
         studentAmount ++;
         this.school = school;

@@ -3,6 +3,7 @@ package User;
 public enum EPermission {
     ANON,
     CUSTOMER,
-    STAFF,
+    PHUC_VU,
+    THU_KY,
     ADMIN
 }

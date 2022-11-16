@@ -1,7 +1,9 @@
-package General.Customer;
+package User;
+
+import General.Input.NString;
 
 import java.io.Serializable;
-import java.util.Scanner;
+import java.util.Arrays;
 
 public class Address implements Serializable {
     //Attribute
@@ -9,12 +11,14 @@ public class Address implements Serializable {
     private String street;
     private String ward;
     private String district;
+    private String city;
     //Constructor
-    public Address(String houseNumber, String street, String ward, String district) {
+    public Address(String houseNumber, String street, String ward, String district, String city) {
         this.houseNumber = houseNumber;
         this.street = street;
         this.ward = ward;
         this.district = district;
+        this.city = city;
     }
 
     public Address() {
@@ -22,13 +26,23 @@ public class Address implements Serializable {
         street = "";
         ward = "";
         district = "";
+        city = "";
+    }
+
+    public Address setFromInput() {
+        houseNumber = new NString("số nhà").getFromInput().getValue();
+        street = new NString("đường").getFromInput().getValue();
+        ward = new NString("phường").getFromInput().getValue();
+        district = new NString("quận").getFromInput().getValue();
+        city = new NString("thành phố").getFromInput().getValue();
+        return this;
     }
     public Address(String s){
-        String a_s[] = s.split(",");
-        houseNumber = a_s[0];
-        street = a_s[1];
-        ward = a_s[2];
-        district = a_s[3];
+        var a_s = Arrays.stream(s.split(",")).toList();
+        houseNumber = a_s.get(0);
+        street = a_s.get(1);
+        ward = a_s.get(2);
+        district = a_s.get(3);
     }
     //Setter and getter
     public String getHouseNumber() {
@@ -65,6 +79,6 @@ public class Address implements Serializable {
 
     @Override
     public String toString() {
-        return houseNumber +","+street+","+ward+","+district;
+        return houseNumber +", "+street+", "+ward+", "+district;
     }
 }

@@ -1,14 +1,13 @@
 package Example.PERSONNEL_MANAGER;
 
-import java.io.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-public class NhanVien extends ConNguoi implements Serializable, Luong {
+public class NhanVien extends ConNguoi implements Luong {
     private String maNV;
     private String xepLoai;
     private float soNgayNghi;
     private String caLam;
+//    Cua Permission
     private String chucVu;
 
     public NhanVien() {

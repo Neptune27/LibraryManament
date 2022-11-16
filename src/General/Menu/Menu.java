@@ -7,11 +7,12 @@ import java.util.LinkedHashMap;
 import java.util.Scanner;
 
 abstract class Menu<T> {
-    String name = "Value";
+    String name = "giá trị";
     String title = "";
     final LinkedHashMap<String, T> functionLHMap = new LinkedHashMap<>();
     final LinkedHashMap<Integer, String> section = new LinkedHashMap<>();
     boolean pauseNext = true;
+    boolean runOnce = false;
 
 
     public Menu() {}
@@ -36,6 +37,10 @@ abstract class Menu<T> {
         this.pauseNext = pauseNext;
     }
 
+    public void setRunOnce(boolean runOnce) {
+        this.runOnce = runOnce;
+    }
+
     private String makeNEqual(int n) {
         return new String(new char[n]).replace("\0", "=");
     }
@@ -56,7 +61,8 @@ abstract class Menu<T> {
                 System.out.println(i+1 + ": " + keys.get(i));
             }
 
-            System.out.println("0: Return");
+            if (!runOnce)
+                System.out.println("0: Return");
             System.out.printf("=======%s=======\n", makeNEqual(title.length()));
 
             inpInt = nInteger.getFromInput().getValue()-1;
@@ -64,6 +70,20 @@ abstract class Menu<T> {
             System.out.println("------------------");
             if (inpInt < keys.size() && inpInt >= 0)
                 call(values.get(inpInt));
+            else if (inpInt != -1) {
+                System.out.println("Vui lòng nhập giá trị hợp lệ.");
+                continue;
+            }
+            else {
+                if (runOnce) {
+                    inpInt = -99;
+                    continue;
+                }
+            }
+
+            if (runOnce) {
+                break;
+            }
             if (pauseNext && inpInt != -1)
                 pressEnterToContinue();
         } while (inpInt != -1);

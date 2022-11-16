@@ -4,8 +4,18 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
+//QLTK Chỉ cần là 1 instance duy nhất mà thôi, nó sẽ lưu trữ 3 mảng chứa 3 loại tài khoản khác nhau,
+//Từ dó ta sẽ tìm kiếm và xử lý dữ dàng hơn, việc đăng nhập sẽ tìm tuần tự 3 loại mảng này.
+//Việc thiết lập dạng tk chỉ được dùng bởi Quan Li/Admin và khi thiết lập ta sẽ xóa thằng đó trong mảng cũ,
+//nâng nó lên mảng mới.
+//Account va tk se lien he voi nhau
 public class QuanLiTaiKhoan implements Serializable, LuuDocFile {
     private String luuTenDangNhap;
+    private ArrayList<QuanLi> quanLiArray = new ArrayList<>();
+    private ArrayList<ThuKi> thuKiArray = new ArrayList<>();
+    private ArrayList<NhanVien> phucVuArray = new ArrayList<>();
+
     private ArrayList<Account> listAccounts = new ArrayList<>();
     Scanner scInt = new Scanner(System.in);
     Scanner scText = new Scanner(System.in);
@@ -81,40 +91,41 @@ public class QuanLiTaiKhoan implements Serializable, LuuDocFile {
     public boolean TimKiemTK(String userName) {
         if (listAccounts.isEmpty())
             return false;
-        for (int i = 0; i < listAccounts.size(); i++) {
-            if (userName.equalsIgnoreCase(listAccounts.get(i).getAccount()))
+        for (Account listAccount : listAccounts) {
+            if (userName.equalsIgnoreCase(listAccount.getAccount()))
                 return true;
         }
         return false;
     }
 
-    public boolean ThemTK(Account acc) {
+
+//    TK se chia lam 3 loai va dung isInstanceOf de them vao tung loai
+    public void ThemTK(Account acc) {
+
         if (!TimKiemTK(acc.getAccount()) || listAccounts.isEmpty()) {
             listAccounts.add(acc);
-            return true;
         }
-        return false;
     }
 
-    public boolean XoaTK(Account acc) {
+    public void XoaTK(Account acc) {
         if (TimKiemTK(acc.getAccount())) {
             listAccounts.remove(acc);
-            return true;
         }
-        return false;
     }
 
     public boolean ThaydoiMK(String userName) {
-        for (int i = 0; i < listAccounts.size(); i++) {
+        for (Account listAccount : listAccounts) {
             if (TimKiemTK(userName)) {
-                System.out.printf("Nhap mat khau moi: ");
-                listAccounts.get(i).setPassword(scText.nextLine());
+                System.out.print("Nhap mat khau moi: ");
+                listAccount.setPassword(scText.nextLine());
                 return true;
             }
         }
         return false;
     }
 
+
+//    TODO Refactor me.
     public boolean dangnhap(ArrayList<Account> list, String maKey) {
         int nhapsai=0;
         String tenDangnhap;
@@ -145,6 +156,8 @@ public class QuanLiTaiKhoan implements Serializable, LuuDocFile {
         temp=0;
         System.out.printf("Nhap mat khau: ");
         matKhau=scText.nextLine();
+
+//        TODO Investigate me.
         while (temp != list.size()) {
             temp=0;
             for (int i = 0; i < list.size(); i++) {

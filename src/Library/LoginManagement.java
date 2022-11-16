@@ -7,82 +7,103 @@ import General.Menu.RunnableMenu;
 
 public class LoginManagement {
 
-    static void login() {
+    private final UserManagement userManagement = new UserManagement();
+
+    public LoginManagement() {
+        load();
+    }
+
+    void login() {
         String username = new NString("Ten TK").getFromInput().getValue();
         String password = new NString("MK").getFromInput().getValue();
 
         try {
-            var user = UserManagement.getUser(username, password);
+            var user = userManagement.getUser(username, password);
             switch (user.getPermission()){
-                case STAFF -> generateMenuStaff();
+                case PHUC_VU -> generateMenuPhucVu(user);
+                case THU_KY -> generateMenuThuKy(user);
                 case CUSTOMER -> generateMenuCustomer();
-                case ADMIN -> generateMenuAdmin();
+                case ADMIN -> generateMenuAdmin(user);
             }
         } catch (UsernameNotFoundException e) {
             System.out.println("Username not found!");
         }
     }
 
-    static void register() {
+    void register() {
         try {
-            String username = new NString("Ten TK").getFromInput().getValue();
-            String password = new NString("MK").getFromInput().getValue();
-            String passwordRetype = new NString("lai MK").getFromInput().getValue();
-            if (!password.equals(passwordRetype)) {
-                register();
-            }
-            else {
-                String name = new NString("ten").getFromInput().getValue();
-                Integer birthYear = new NInteger("nam sinh").getFromInput().getValue();
-                UserManagement.addUser(name, birthYear, username, password, EPermission.CUSTOMER);
-            }
-        }
-        catch (UsernameExistException ex) {
-            System.out.println("Tai khoan bi trung, vui long nhap ten tai khoan khac!");
-            register();
+            userManagement.addMenuUserFromInput();
+        } catch (RuntimeException e) {
+            System.out.println("Tên tk đã tồn tại");
         }
 
     }
 
     public static void main(String[] args) {
-        generateMenu();
+        LoginManagement loginManagement = new LoginManagement();
+        loginManagement.generateMenu();
     }
 
-    public static void generateMenuGuest() {
-
-    }
 
     public static void generateMenuCustomer() {
-
     }
 
-    public static void generateMenuStaff() {
 
+//    TODO Implement me.
+    public static void generateMenuPhucVu(StaffUser user) {
+        RunnableMenu menu = new RunnableMenu("Phục Vụ");
+        menu.add("Tìm vị trí sách", ()->{});
+        menu.addSection("Quản lý tài khoản");
+        menu.add("Chỉnh tên tài khoản", ()->{});
+        menu.add("Chỉnh mật khẩu", ()->{});
+        menu.add("Chỉnh tên", ()->{});
+        menu.add("Xuất thông tin", ()->{});
     }
 
-    public static void generateMenuAdmin() {
-
+    public static void generateMenuThuKy(StaffUser user) {
+        RunnableMenu menu = new RunnableMenu("Thư Ký");
+        menu.add("Tìm vị trí sách", ()->{});
+        menu.add("Thống kê", ()->{});
+        menu.add("Quản lý khách hàng", ()->{});
+        menu.add("Quản lý sách", ()->{});
+        menu.addSection("Quản lý tài khoản");
+        menu.add("Chỉnh tên tài khoản", ()->{});
+        menu.add("Chỉnh mật khẩu", ()->{});
+        menu.add("Chỉnh tên", ()->{});
+        menu.add("Xuất thông tin", ()->{});
     }
 
-    public static void save() {
-        UserManagement.save();
+    public static void generateMenuAdmin(StaffUser user) {
+        RunnableMenu menu = new RunnableMenu("Thư Ký");
+        menu.add("Thống kê", ()->{});
+        menu.add("Quản lý khách hàng", ()->{});
+        menu.add("Quản lý sách", ()->{});
+        menu.add("Quản lý tài khoản", ()->{});
+        menu.add("Xuất thông tin", ()->{});
     }
 
-    public static void load() {
-        UserManagement.load();
+
+
+    public void save() {
+        userManagement.save();
     }
 
-    public static void generateMenu() {
+    public void load() {
+        userManagement.load();
+    }
+
+    public void generateMenu() {
         RunnableMenu menu = new RunnableMenu("Login Menu");
         menu.addSection("Login");
         menu.add("Login", ()->{});
         menu.add("Login as Guest", ()->{});
-        menu.add("Register", LoginManagement::register);
-        menu.add("Save", LoginManagement::save);
-        menu.add("Load", LoginManagement::load);
+        menu.add("Change by name", userManagement::changeByName);
+        menu.add("Register", this::register);
+        menu.add("Save", this::save);
+        menu.add("Load", this::load);
         menu.addSection("Debug");
-        menu.add("User Size", () -> System.out.println(UserManagement.users.size()));
-        menu.add("Users: ", () -> System.out.println(UserManagement.users));
+        menu.add("User Size", () -> System.out.println(userManagement.users.size()));
+        menu.add("Users: ", () -> System.out.println(userManagement.users));
         menu.show();
     }
 }
