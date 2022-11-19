@@ -54,6 +54,16 @@ public abstract class Person implements Serializable, ICreateFromInput {
         address = new Address().setFromInput();
     }
 
+    public RunnableMenu makeChangeMenu() {
+        RunnableMenu menu = new RunnableMenu(name);
+        menu.addSection("Person");
+        menu.add("Chỉnh tên", ()->{name = new NString("tên").getFromInput().getValue();});
+        menu.add("Chỉnh tuoi", ()->{age = new NInteger("tuoi").getFromInput().getValue();});
+        menu.add("Chỉnh gioi tinh", this::setSexFromInput);
+        menu.add("Chỉnh sdt", this::setPhoneNumber);
+        menu.add("Chỉnh noi o", ()->setAddress(new Address().setFromInput()));
+        return menu;
+    }
 
     public String getName() {
         return name;

@@ -1,5 +1,7 @@
 package General.Customer;
 
+import General.Menu.RunnableMenu;
+
 public class Student extends Customer{
     private String school;
     private static String type;
@@ -42,6 +44,7 @@ public class Student extends Customer{
     public static void setType(String type) {
         Student.type = type;
     }
+
 
     @Override
     public String toString() {

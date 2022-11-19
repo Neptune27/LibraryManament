@@ -6,7 +6,7 @@ import User.Errors.UsernameExistException;
 public class AdminUser extends StaffUser {
 
 
-    public AdminUser(String name, int age, ESex sex, String phoneNumber, Address address, int id, String username, String password, int dayLeave, EWorkShift workShift, Date workStartDay) throws UsernameExistException {
+    public AdminUser(String name, int age, ESex sex, String phoneNumber, Address address, int id, String username, String password, int dayLeave, EWorkShift workShift, Date workStartDay) {
         super(name, age, sex, phoneNumber, address, id, username, password, dayLeave, workShift, workStartDay, EPermission.ADMIN);
     }
 

@@ -6,7 +6,6 @@ import General.Input.NInteger;
 import General.Input.NString;
 import General.Menu.IMenu;
 import General.Menu.RunnableMenu;
-import User.Errors.UsernameExistException;
 
 public abstract class StaffUser extends Person implements IMenu, ISalary {
     private int id;
@@ -23,7 +22,7 @@ public abstract class StaffUser extends Person implements IMenu, ISalary {
     }
 
     public StaffUser(String name, int age, ESex sex, String phoneNumber, Address address,
-                     int id, String username, String password,int dayLeave, EWorkShift workShift, Date workStartDay, EPermission permission) throws UsernameExistException {
+                     int id, String username, String password,int dayLeave, EWorkShift workShift, Date workStartDay, EPermission permission) {
         super(name, age, sex, phoneNumber, address);
         this.id = id;
         setUsername(username);
@@ -124,15 +123,18 @@ public abstract class StaffUser extends Person implements IMenu, ISalary {
         workStartDay = new NDate("ngày bắt đầu làm việc (dd-mm-yyyy)").getFromInput().getValue();
     }
 
-    public void changePropertyMenu() {
-        RunnableMenu menu = new RunnableMenu(getName());
-        menu.add("Thay tên", ()->setName(new NString("tên").getFromInput().getValue()));
-        menu.add("Thay tuổi", ()->setAge(new NInteger("tuổi").getFromInput().getValue()));
-        menu.add("Thay giới tính", this::setSexFromInput);
-        menu.add("Thay SDT", this::setPhoneNumber);
-        menu.add("Thay địa chỉ", ()->setAddress(new Address().setFromInput()));
+    @Override
+    public RunnableMenu makeChangeMenu() {
+        RunnableMenu menu = super.makeChangeMenu();
+        menu.addSection("Staff User");
         menu.add("Thay ngày nghỉ", ()->setDayLeave(new NInteger("ngày ").getFromInput().getValue()));
         menu.add("Thay ca làm", this::setWorkShiftFromInput);
+        return menu;
+    }
+
+    public void changePropertyMenu() {
+        RunnableMenu menu = makeChangeMenu();
+
         menu.show();
     }
 
@@ -156,5 +158,12 @@ public abstract class StaffUser extends Person implements IMenu, ISalary {
                 ", " + workShift +
                 ", " + workStartDay +
                 '\n';
+    }
+
+    public String getBasicInfo() {
+        return id +
+                ", " + username +
+                ", " + getName() +
+                ", " + getAge();
     }
 }

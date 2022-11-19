@@ -13,7 +13,12 @@ public class Date implements Serializable {
     }
 
     public Date() {
-        date = LocalDate.of(0, 0, 0);
+        date = LocalDate.now();
+    }
+
+    public Date plusDay(int dayToAdd) {
+        date.plusDays(dayToAdd);
+        return this;
     }
 
     public Date(String s){

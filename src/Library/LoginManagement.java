@@ -1,13 +1,18 @@
 package Library;
 
+import Books.BookManagement;
+import General.Common.ISaveLoad;
+import General.Menu.IMenu;
 import User.Errors.*;
 import User.*;
 import General.Input.*;
 import General.Menu.RunnableMenu;
 
-public class LoginManagement {
+public class LoginManagement implements ISaveLoad, IMenu {
 
-    private final UserManagement userManagement = new UserManagement();
+    private final UserManagement userManagement = UserManagement.getInstance();
+    private final BookManagement bookManagement = BookManagement.getInstance();
+
 
     public LoginManagement() {
         load();
@@ -30,18 +35,11 @@ public class LoginManagement {
         }
     }
 
-    void register() {
-        try {
-            userManagement.addMenuUserFromInput();
-        } catch (RuntimeException e) {
-            System.out.println("Tên tk đã tồn tại");
-        }
 
-    }
 
     public static void main(String[] args) {
         LoginManagement loginManagement = new LoginManagement();
-        loginManagement.generateMenu();
+        loginManagement.menu();
     }
 
 
@@ -50,36 +48,46 @@ public class LoginManagement {
 
 
 //    TODO Implement me.
-    public static void generateMenuPhucVu(StaffUser user) {
+    public void generateMenuPhucVu(StaffUser user) {
         RunnableMenu menu = new RunnableMenu("Phục Vụ");
-        menu.add("Tìm vị trí sách", ()->{});
+        menu.addSection("Chức vụ phục vụ");
+        menu.add("Tìm vị trí sách", bookManagement::findBookFromInput);
         menu.addSection("Quản lý tài khoản");
         menu.add("Chỉnh tên tài khoản", ()->{});
         menu.add("Chỉnh mật khẩu", ()->{});
         menu.add("Chỉnh tên", ()->{});
         menu.add("Xuất thông tin", ()->{});
+
+        menu.show();
+
     }
 
-    public static void generateMenuThuKy(StaffUser user) {
+    public void generateMenuThuKy(StaffUser user) {
         RunnableMenu menu = new RunnableMenu("Thư Ký");
-        menu.add("Tìm vị trí sách", ()->{});
-        menu.add("Thống kê", ()->{});
+        menu.addSection("Chức vụ thư ký");
         menu.add("Quản lý khách hàng", ()->{});
         menu.add("Quản lý sách", ()->{});
+        menu.add("Quản lý mượn sách", ()->{});
         menu.addSection("Quản lý tài khoản");
         menu.add("Chỉnh tên tài khoản", ()->{});
         menu.add("Chỉnh mật khẩu", ()->{});
         menu.add("Chỉnh tên", ()->{});
         menu.add("Xuất thông tin", ()->{});
+
+        menu.show();
+
     }
 
-    public static void generateMenuAdmin(StaffUser user) {
-        RunnableMenu menu = new RunnableMenu("Thư Ký");
+    public void generateMenuAdmin(StaffUser user) {
+        RunnableMenu menu = new RunnableMenu("Admin");
         menu.add("Thống kê", ()->{});
         menu.add("Quản lý khách hàng", ()->{});
-        menu.add("Quản lý sách", ()->{});
-        menu.add("Quản lý tài khoản", ()->{});
+        menu.add("Quản lý sách", bookManagement::menu);
+        menu.add("Quản lý thẻ mượn sách", bookManagement::menu);
+        menu.add("Quản lý tài khoản", userManagement::menu);
         menu.add("Xuất thông tin", ()->{});
+
+        menu.show();
     }
 
 
@@ -92,18 +100,21 @@ public class LoginManagement {
         userManagement.load();
     }
 
-    public void generateMenu() {
+    public void menu() {
         RunnableMenu menu = new RunnableMenu("Login Menu");
+        menu.addBackgroundTask(this::save);
+
         menu.addSection("Login");
-        menu.add("Login", ()->{});
-        menu.add("Login as Guest", ()->{});
-        menu.add("Change by name", userManagement::changeByName);
-        menu.add("Register", this::register);
-        menu.add("Save", this::save);
-        menu.add("Load", this::load);
-        menu.addSection("Debug");
-        menu.add("User Size", () -> System.out.println(userManagement.users.size()));
-        menu.add("Users: ", () -> System.out.println(userManagement.users));
+        menu.add("Login", this::login);
+//        menu.add("Change by name", userManagement::changeByName);
+//        menu.add("Register", this::register);
+//        menu.add("Save", this::save);
+//        menu.add("Load", this::load);
+//        menu.addSection("Debug");
+//        menu.add("User Size", () -> System.out.println(userManagement.users.size()));
+//        menu.add("Users: ", () -> System.out.println(userManagement.users));
+//        menu.addSection("Debug - Ke sach");
+//        menu.add("Vao QL Sach: ", bookManagement::menu);
         menu.show();
     }
 }

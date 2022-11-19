@@ -2,23 +2,39 @@ package General.Menu;
 
 import General.Input.NInteger;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Scanner;
+import java.util.*;
 
 abstract class Menu<T> {
-    String name = "giá trị";
+    String name = "vị trí";
     String title = "";
     final LinkedHashMap<String, T> functionLHMap = new LinkedHashMap<>();
+    final HashSet<T> backgroundTasks = new HashSet<>();
+    final HashSet<T> onReturnTask = new HashSet<>();
     final LinkedHashMap<Integer, String> section = new LinkedHashMap<>();
     boolean pauseNext = true;
     boolean runOnce = false;
+    int res = -99;
 
+    public int getRes() {
+        return res;
+    }
+
+    public void removeItem(String keyName) {
+        functionLHMap.remove(keyName);
+    }
 
     public Menu() {}
 
     public Menu(String title) {
         this.title = title;
+    }
+
+    public void clear() {
+        functionLHMap.clear();
+        backgroundTasks.clear();
+        section.clear();
+        pauseNext = true;
+        runOnce = false;
     }
 
     public void add(String name, T t) {
@@ -27,6 +43,14 @@ abstract class Menu<T> {
 
     public void addSection(String name) {
         section.put(functionLHMap.size(), name);
+    }
+
+    public void addBackgroundTask(T task) {
+        backgroundTasks.add(task);
+    }
+
+    public void addOnReturnTask(T task) {
+        onReturnTask.add(task);
     }
 
     public void setName(String name) {
@@ -39,6 +63,7 @@ abstract class Menu<T> {
 
     public void setRunOnce(boolean runOnce) {
         this.runOnce = runOnce;
+        setPauseNext(false);
     }
 
     private String makeNEqual(int n) {
@@ -46,12 +71,17 @@ abstract class Menu<T> {
     }
 
     public void show() {
+
         var keys = new ArrayList<>(functionLHMap.keySet());
         var values = new ArrayList<>(functionLHMap.values());
 
-        int inpInt;
+        res = -99;
         NInteger nInteger = new NInteger(name);
         do {
+            for(var task : backgroundTasks) {
+                call(task);
+            }
+
             System.out.printf("=======%s=======\n", title);
 
             for (int i = 0; i < keys.size(); i++) {
@@ -61,32 +91,43 @@ abstract class Menu<T> {
                 System.out.println(i+1 + ": " + keys.get(i));
             }
 
-            if (!runOnce)
-                System.out.println("0: Return");
+            if (keys.size() == 0) {
+                System.out.println("Khong co du lieu!");
+                System.out.printf("=======%s=======\n", makeNEqual(title.length()));
+                break;
+            }
+            if (!(runOnce))
+                System.out.println("0: Quay ra");
             System.out.printf("=======%s=======\n", makeNEqual(title.length()));
 
-            inpInt = nInteger.getFromInput().getValue()-1;
+            res = nInteger.getFromInput().getValue()-1;
 
             System.out.println("------------------");
-            if (inpInt < keys.size() && inpInt >= 0)
-                call(values.get(inpInt));
-            else if (inpInt != -1) {
+            if (res < keys.size() && res >= 0)
+                call(values.get(res));
+            else if (res != -1) {
                 System.out.println("Vui lòng nhập giá trị hợp lệ.");
                 continue;
             }
             else {
                 if (runOnce) {
-                    inpInt = -99;
+                    res = -99;
                     continue;
                 }
             }
 
+            if (pauseNext && res != -1)
+                pressEnterToContinue();
+
+
             if (runOnce) {
                 break;
             }
-            if (pauseNext && inpInt != -1)
-                pressEnterToContinue();
-        } while (inpInt != -1);
+        } while (res != -1);
+
+        for(var task : onReturnTask) {
+            call(task);
+        }
     }
 
     private void pressEnterToContinue()

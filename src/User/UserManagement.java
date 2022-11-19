@@ -1,65 +1,76 @@
 package User;
 
 import General.Common.ISaveLoad;
+import General.Customer.Date;
+import General.Input.NInteger;
 import General.Input.NString;
+import General.Menu.IMenu;
 import General.Menu.RunnableMenu;
 import User.Errors.UsernameExistException;
 import User.Errors.UsernameNotFoundException;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 //TODO Add 3 retry/Or not.
-public class UserManagement implements ISaveLoad {
+public class UserManagement implements ISaveLoad, IMenu {
     public ArrayList<StaffUser> users = new ArrayList<>();
     private static int latestUserId = 0;
+    private static UserManagement instance;
 
-    public void addUser(String name, int age, String username, String password, EPermission permission) throws UsernameExistException {
-        if (isUsernameExist(username)) {
-            throw new UsernameExistException("Username da ton tai!");
+    public static UserManagement getInstance() {
+        if (Objects.isNull(instance)) {
+            instance = new UserManagement();
         }
-        switch (permission) {
-            case CUSTOMER -> {}
-            case THU_KY -> {
-            }
-            case PHUC_VU -> {
-
-            }
-            case ADMIN -> {
-
-            }
-        };
+        return instance;
     }
+
+    private UserManagement(){};
+
+
 
     public void addAdminDefault() {
-        AdminUser newAdmin = new AdminUser();
+        var admin = new AdminUser("admin", 18, ESex.NOT_SPECIFY, "0393406364", new Address("a", "a", "a", "a", "a"), getNewID(), "admin",
+                "admin", 0, EWorkShift.BOTH, new Date("18-11-2022"));
+        if (isUsernameExist(admin.getUsername())) {
+            System.out.println("Ten tk da ton tai");
+            return;
+        }
+        users.add(admin);
     }
 
-    public void addAdminFromInput() throws UsernameExistException {
+    public void addAdminFromInput() {
         AdminUser newAdmin = new AdminUser();
         newAdmin.setFromInput();
         if (isUsernameExist(newAdmin.getUsername())) {
-            throw new UsernameExistException("Username da ton tai");
+            System.out.println("Ten tk da ton tai");
+            return;
         }
         users.add(newAdmin);
     }
 
-    public void addThuKyFromInput() throws UsernameExistException {
-        ThuKyUser newAdmin = new ThuKyUser();
-        newAdmin.setFromInput();
-        if (isUsernameExist(newAdmin.getUsername())) {
-            throw new UsernameExistException("Username da ton tai");
+    public void addThuKyFromInput() {
+        ThuKyUser thuKy = new ThuKyUser();
+        thuKy.setFromInput();
+        if (isUsernameExist(thuKy.getUsername())) {
+            System.out.println("Ten tk da ton tai");
+            return;
         }
-        users.add(newAdmin);
+        users.add(thuKy);
     }
 
     public void addPhucVuFromInput() throws UsernameExistException {
-        PhucVuUser newAdmin = new PhucVuUser();
-        newAdmin.setFromInput();
-        if (isUsernameExist(newAdmin.getUsername())) {
-            throw new UsernameExistException("Username da ton tai");
+        PhucVuUser phucVuUser = new PhucVuUser();
+        phucVuUser.setFromInput();
+        if (isUsernameExist(phucVuUser.getUsername())) {
+            System.out.println("Ten tk da ton tai");
+            return;
         }
-        users.add(newAdmin);
+        users.add(phucVuUser);
     }
 
     public void addMenuUserFromInput() throws RuntimeException{
@@ -70,10 +81,6 @@ public class UserManagement implements ISaveLoad {
         menu.show();
     }
 
-    public static int getNewID() {
-        latestUserId++;
-        return latestUserId;
-    }
 
     public static int getLatestUserId() {
         return latestUserId;
@@ -96,25 +103,65 @@ public class UserManagement implements ISaveLoad {
         return users.stream().filter(user -> user.getUsername().equals(username)).toList().size() > 0;
     }
 
-    public void changeByName() {
-        String name = new NString("tên").getFromInput().getValue();
-        var validUsers = users.stream().filter(staffUser -> staffUser.getName().contains(name)).toList();
-        RunnableMenu menu = new RunnableMenu();
+    void register() {
+        try {
+            addMenuUserFromInput();
+        } catch (RuntimeException e) {
+            System.out.println("Tên tk đã tồn tại");
+        }
+    }
+
+//    region CHANGE USER
+
+    private void changeByFuncMenu(String menuName, Function<StaffUser, Boolean> function) {
+        var validUsers = users.stream().filter(function::apply).toList();
+        RunnableMenu menu = new RunnableMenu(menuName);
         menu.setRunOnce(true);
         for (var user: validUsers) {
-            menu.add(user.getName(), user::changePropertyMenu);
+            menu.add(user.getBasicInfo(), user::changePropertyMenu);
         }
         menu.show();
     }
 
-    public void changeUserFromInputMenu() {
+    private void changeByAllMenu() {
+        changeByFuncMenu("Tất cả", staffUser -> true);
+    }
+
+    private void changeByIDMenu() {
+        int id = new NInteger("ID").getFromInput().getValue();
+        changeByFuncMenu("ID", staffUser -> staffUser.getId() == id);
+    }
+
+    private void changeByNameMenu() {
+        String name = new NString("tên").getFromInput().getValue();
+        changeByFuncMenu("Tên", staffUser -> staffUser.getName().toUpperCase(Locale.ROOT).contains(name.toUpperCase(Locale.ROOT)));
+    }
+
+    private void changeByAgeMenu() {
+        int age = new NInteger("tuổi").getFromInput().getValue();
+        changeByFuncMenu("Tuổi", staffUser -> staffUser.getId() == age);
+    }
+
+    private void changeByUsernameMenu() {
+        var username = new NString("username").getFromInput().getValue();
+        changeByFuncMenu("Ssername", staffUser -> staffUser.getUsername().toUpperCase(Locale.ROOT).contains(username.toUpperCase(Locale.ROOT)));
+    }
+
+    public void changeUserMenu() {
         RunnableMenu menu = new RunnableMenu("Thay đổi");
-        menu.add("Thay bằng tên", this::changeByName);
+        menu.add("Tất cả", this::changeByAllMenu);
+        menu.add("Thay bằng ID", this::changeByIDMenu);
+        menu.add("Thay bằng tên", this::changeByNameMenu);
+        menu.add("Thay bằng tuổi", this::changeByAgeMenu);
+        menu.add("Thay bằng tên tài khoản", this::changeByUsernameMenu);
 
         menu.show();
 
     }
 
+//    endregion
+
+//region SAVE LOAD
     public void save() {
         File file = new File("./src/Data/User.bin");
         FileOutputStream fos = null;
@@ -127,6 +174,12 @@ public class UserManagement implements ISaveLoad {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+
+    public static int getNewID() {
+        latestUserId++;
+        return latestUserId;
     }
 
     private void setNewLatestUserId() {
@@ -149,7 +202,21 @@ public class UserManagement implements ISaveLoad {
             e.printStackTrace();
         }
         finally {
+            if (users.isEmpty()) {
+                addAdminDefault();
+            }
             setNewLatestUserId();
         }
+    }
+//endregion
+
+
+    @Override
+    public void menu() {
+        RunnableMenu menu = new RunnableMenu("Quan Ly Tai Khoan");
+        menu.addBackgroundTask(this::save);
+        menu.add("Chỉnh tài khoản", this::changeUserMenu);
+        menu.add("Thêm tài khoản", this::register);
+        menu.show();
     }
 }

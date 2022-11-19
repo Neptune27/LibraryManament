@@ -1,8 +1,13 @@
 package Books;
 
+import General.Input.NInteger;
+import General.Input.NString;
+import General.Menu.RunnableMenu;
+import User.ICreateFromInput;
+
 import java.io.Serializable;
 
-public abstract class Book implements Serializable {
+public abstract class Book implements Serializable, ICreateFromInput {
     private String ID;
     private String bookName;
     private String authorName;
@@ -10,6 +15,8 @@ public abstract class Book implements Serializable {
     private boolean isBorrowed;
     private EBookType mainType;
     private EBookType subType;
+
+    public Book(){};
 
     public Book(String ID, String bookName, String authorName, int ratedAge, boolean isBorrowed) {
         this.ID = ID;
@@ -73,5 +80,34 @@ public abstract class Book implements Serializable {
 
     public void setSubType(EBookType subType) {
         this.subType = subType;
+    }
+
+    private EBookType setBookTypeFromInput(String name) {
+        final EBookType[] type = new EBookType[1];
+
+        RunnableMenu menu = new RunnableMenu(name);
+        menu.setRunOnce(true);
+        menu.add("Tâm lý", ()->{
+            type[0] = EBookType.TAM_LY;});
+        menu.add("Thiếu nhi", ()->{
+            type[0] = EBookType.THIEU_NHI;});
+        menu.add("Tiểu thuyết", ()->{
+            type[0] = EBookType.TIEU_THUYET;});
+        menu.add("Văn học", ()->{
+            type[0] = EBookType.VAN_HOC;});
+        menu.add("Kh", ()->{
+            type[0] = EBookType.NONE;});
+        menu.show();
+
+        return type[0];
+    }
+
+    @Override
+    public void setFromInput() {
+        ID = new NString("ID").getFromInput().getValue();
+        bookName= new NString("tên sách").getFromInput().getValue();
+        authorName = new NString("tên tác giả").getFromInput().getValue();
+        ratedAge = new NInteger("độ tuổi phù hợp").getFromInput().getValue();
+        subType = setBookTypeFromInput("Chủ dề phụ");
     }
 }

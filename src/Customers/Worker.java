@@ -1,14 +1,17 @@
 package Customers;
 
 import General.Input.NString;
+import General.Menu.RunnableMenu;
 import User.Address;
 import User.ESex;
 
 public class Worker extends Customer{
-    String workPlace;
+    Address workPlace;
 
-    public Worker(String name, int age, ESex sex, String phoneNumber, Address address, int id, String workPlace) {
-        super(name, age, sex, phoneNumber, address, id, ECustomerType.STUDENT);
+    public Worker(){}
+
+    public Worker(String name, int age, ESex sex, String phoneNumber, Address address, int id, Address workPlace) {
+        super(name, age, sex, phoneNumber, address, id, ECustomerType.WORKER);
         this.workPlace = workPlace;
     }
 
@@ -16,15 +19,30 @@ public class Worker extends Customer{
     @Override
     public void setFromInput() {
         super.setFromInput();
-        workPlace = new NString("nơi làm").getFromInput().getValue();
+        setCType(ECustomerType.WORKER);
+        System.out.println("Noi lam");
+        workPlace = new Address().setFromInput();
     }
 
-    public void setWorkPlace(String workPlace) {
+    public void setWorkPlace(Address workPlace) {
         this.workPlace = workPlace;
     }
 
-    public String getWorkPlace() {
+    public Address getWorkPlace() {
         return workPlace;
+    }
+
+    @Override
+    public RunnableMenu makeChangeMenu() {
+        RunnableMenu menu = super.makeChangeMenu();
+        menu.addSection("Student");
+        menu.add("Thay truong", ()->workPlace = new Address().setFromInput());
+        return menu;
+    }
+
+    @Override
+    public void changePropertiesMenu() {
+        makeChangeMenu().show();
     }
 
     @Override
