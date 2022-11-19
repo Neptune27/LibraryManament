@@ -11,15 +11,28 @@ import User.StaffUser;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class TicketManagement implements ISaveLoad, IMenu {
     private ArrayList<BorrowedTicket> tickets = new ArrayList<>();
     private final CustomerManagement customerManagement = CustomerManagement.getInstance();
     private final BookManagement bookManagement = BookManagement.getInstance();
     private static int latestTicketId = 0;
+    private static TicketManagement instance;
 
     public static void setLatestTicketId(int latestTicketId) {
         TicketManagement.latestTicketId = latestTicketId;
+    }
+
+    public static TicketManagement getInstance() {
+        if (Objects.isNull(instance)) {
+            instance = new TicketManagement();
+        }
+        return instance;
+    }
+
+    private TicketManagement() {
+        load();
     }
 
     public int getNewTicketId() {
@@ -44,11 +57,17 @@ public class TicketManagement implements ISaveLoad, IMenu {
     }
 
     private void setNewLatestTicketId() {
-        int max = 0;
-        for (var ticket : tickets) {
-            max = Math.max(max, ticket.getTicketID());
+        try {
+            int max = 0;
+            for (var ticket : tickets) {
+                max = Math.max(max, ticket.getTicketID());
+            }
+            setLatestTicketId(max);
         }
-        setLatestTicketId(max);
+        catch (ClassCastException ig) {
+            save();
+        }
+
     }
 
     @Override
@@ -64,6 +83,7 @@ public class TicketManagement implements ISaveLoad, IMenu {
             e.printStackTrace();
         }
         finally {
+            save();
             setNewLatestTicketId();
         }
     }
@@ -83,7 +103,8 @@ public class TicketManagement implements ISaveLoad, IMenu {
             return;
         }
         int dateBorrowed = new NInteger("so ngay muon").getFromInput().getValue();
-        var borrowedTicket = new BorrowedTicket(getNewTicketId(), customer.getId(), staffUser.getId(), book.getID(), new Date(), new Date().plusDay(dateBorrowed));
+        int price = new NInteger("gia").getFromInput().getValue();
+        var borrowedTicket = new BorrowedTicket(getNewTicketId(), customer.getId(), staffUser.getId(), book.getID(), new Date(), new Date().plusDay(dateBorrowed), price);
         tickets.add(borrowedTicket);
     }
 
@@ -100,7 +121,9 @@ public class TicketManagement implements ISaveLoad, IMenu {
     public void menu(StaffUser staffUser) {
         RunnableMenu menu = new RunnableMenu("Quan ly phieu muon");
         menu.addBackgroundTask(this::save);
-
+        menu.add("Thêm thẻ mượn", ()->addNewTicketMenu(staffUser));
+        menu.add("Xoa the muon", this::removeTicketMenu);
+        menu.show();
     }
 
     @Override

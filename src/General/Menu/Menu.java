@@ -78,9 +78,7 @@ abstract class Menu<T> {
         res = -99;
         NInteger nInteger = new NInteger(name);
         do {
-            for(var task : backgroundTasks) {
-                call(task);
-            }
+
 
             System.out.printf("=======%s=======\n", title);
 
@@ -114,6 +112,10 @@ abstract class Menu<T> {
                     res = -99;
                     continue;
                 }
+            }
+
+            for(var task : backgroundTasks) {
+                call(task);
             }
 
             if (pauseNext && res != -1)

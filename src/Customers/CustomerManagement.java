@@ -24,7 +24,7 @@ public class CustomerManagement implements ISaveLoad, IMenu {
         return instance;
     }
 
-    private CustomerManagement() {};
+    private CustomerManagement() {load();};
 
 
     public static void setLatestCustomerId(int latestCustomerId) {
@@ -102,6 +102,8 @@ public class CustomerManagement implements ISaveLoad, IMenu {
             customer.setFromInput();
             customers.add(customer);
         });
+
+        menu.show();
     }
 
     //    region CHANGE CUSTOMER
@@ -164,13 +166,63 @@ public class CustomerManagement implements ISaveLoad, IMenu {
     }
 //endregion
 
+//    region REMOVE CUSTOMER
+
+    private void removeByFuncMenu(String menuName, Function<Customer, Boolean> function) {
+        var validUsers = customers.stream().filter(function::apply).toList();
+        RunnableMenu menu = new RunnableMenu(menuName);
+        menu.setRunOnce(true);
+        for (var user: validUsers) {
+            menu.add(user.getBasicInfo(), ()->{
+                customers.remove(user);
+            });
+        }
+        menu.show();
+    }
+
+    private void removeByAllMenu() {
+        removeByFuncMenu("Tất cả", customer -> true);
+    }
+
+    private void removeByIDMenu() {
+        int id = new NInteger("ID").getFromInput().getValue();
+        removeByFuncMenu("ID", customer -> customer.getId() == id);
+    }
+
+    private void removeByNameMenu() {
+        String name = new NString("tên").getFromInput().getValue();
+        removeByFuncMenu("Tên", customer -> customer.getName().toUpperCase(Locale.ROOT).contains(name.toUpperCase(Locale.ROOT)));
+    }
+
+    private void removeByAgeMenu() {
+        int age = new NInteger("tuổi").getFromInput().getValue();
+        removeByFuncMenu("Tuổi", customer -> customer.getId() == age);
+    }
+
+
+    public void removeCustomerMenu() {
+        RunnableMenu menu = new RunnableMenu("Xoa");
+        menu.add("Tất cả", this::removeByAllMenu);
+        menu.add("Thay bằng ID", this::removeByIDMenu);
+        menu.add("Thay bằng tên", this::removeByNameMenu);
+        menu.add("Thay bằng tuổi", this::removeByAgeMenu);
+
+        menu.show();
+
+    }
+
+//    endregion
+
     @Override
     public void menu() {
         RunnableMenu menu = new RunnableMenu("Quan Ly Khach Hang");
         menu.addBackgroundTask(this::save);
         menu.add("Thêm khách hàng", this::addCustomerMenu);
         menu.add("Chỉnh sửa khách hàng", this::changeCustomerMenu);
-//        menu.add("Xóa khách hàng");
+        menu.add("Xóa khách hàng", this::removeCustomerMenu);
 //        menu.add("Thống kê");
+        menu.show();
     }
+
+
 }

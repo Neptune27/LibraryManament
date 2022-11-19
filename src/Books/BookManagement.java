@@ -403,6 +403,7 @@ public class BookManagement implements ISaveLoad, IMenu {
                 });
             }
         }
+        menu.show();
         return bookToGet[0];
     }
 

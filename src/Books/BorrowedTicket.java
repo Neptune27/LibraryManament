@@ -11,14 +11,16 @@ public class BorrowedTicket implements Serializable {
     private String bookID;
     private Date dateBorrowed;
     private Date expiredDate;
+    private int price;
 
-    public BorrowedTicket(int ticketID,int customerID, int issueByID, String bookID, Date dateBorrowed, Date expiredDate) {
+    public BorrowedTicket(int ticketID,int customerID, int issueByID, String bookID, Date dateBorrowed, Date expiredDate, int price) {
         this.ticketID = ticketID;
         this.customerID = customerID;
         this.issueByID = issueByID;
         this.bookID = bookID;
         this.dateBorrowed = dateBorrowed;
         this.expiredDate = expiredDate;
+        this.price = price;
     }
 
     public void setTicketID(int ticketID) {
@@ -67,5 +69,13 @@ public class BorrowedTicket implements Serializable {
 
     public int getIssueByID() {
         return issueByID;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public int getPrice() {
+        return price;
     }
 }

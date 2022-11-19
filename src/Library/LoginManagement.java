@@ -1,6 +1,8 @@
 package Library;
 
 import Books.BookManagement;
+import Books.TicketManagement;
+import Customers.CustomerManagement;
 import General.Common.ISaveLoad;
 import General.Menu.IMenu;
 import User.Errors.*;
@@ -12,6 +14,8 @@ public class LoginManagement implements ISaveLoad, IMenu {
 
     private final UserManagement userManagement = UserManagement.getInstance();
     private final BookManagement bookManagement = BookManagement.getInstance();
+    private final CustomerManagement customerManagement = CustomerManagement.getInstance();
+    private final TicketManagement ticketManagement = TicketManagement.getInstance();
 
 
     public LoginManagement() {
@@ -81,9 +85,9 @@ public class LoginManagement implements ISaveLoad, IMenu {
     public void generateMenuAdmin(StaffUser user) {
         RunnableMenu menu = new RunnableMenu("Admin");
         menu.add("Thống kê", ()->{});
-        menu.add("Quản lý khách hàng", ()->{});
+        menu.add("Quản lý khách hàng", customerManagement::menu);
         menu.add("Quản lý sách", bookManagement::menu);
-        menu.add("Quản lý thẻ mượn sách", bookManagement::menu);
+        menu.add("Quản lý thẻ mượn sách", ()->ticketManagement.menu(user));
         menu.add("Quản lý tài khoản", userManagement::menu);
         menu.add("Xuất thông tin", ()->{});
 
