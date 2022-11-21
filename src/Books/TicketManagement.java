@@ -15,8 +15,8 @@ import java.util.Objects;
 
 public class TicketManagement implements ISaveLoad, IMenu {
     private ArrayList<BorrowedTicket> tickets = new ArrayList<>();
-    private final CustomerManagement customerManagement = CustomerManagement.getInstance();
-    private final BookManagement bookManagement = BookManagement.getInstance();
+    private CustomerManagement customerManagement;
+    private BookManagement bookManagement;
     private static int latestTicketId = 0;
     private static TicketManagement instance;
 
@@ -35,9 +35,30 @@ public class TicketManagement implements ISaveLoad, IMenu {
         load();
     }
 
+    public void setBookManagement(BookManagement bookManagement) {
+        this.bookManagement = bookManagement;
+    }
+
+    public void setCustomerManagement(CustomerManagement customerManagement) {
+        this.customerManagement = customerManagement;
+    }
+
     public int getNewTicketId() {
         latestTicketId++;
         return latestTicketId;
+    }
+
+    public boolean isBorrowed(Book book) {
+        var now = new Date();
+        for (var ticket : tickets) {
+            if (Objects.equals(ticket.getBookID(), book.getID())) {
+                int val = now.compareTo(ticket.getExpiredDate());
+                if (val < 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     // region SAVE LOAD

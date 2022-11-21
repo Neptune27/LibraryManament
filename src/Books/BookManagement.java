@@ -18,10 +18,15 @@ import java.util.function.Function;
 public class BookManagement implements ISaveLoad, IMenu {
     public ArrayList<Shelf> shelves = new ArrayList<>();
     private static int latestShelfId = 0;
-    private boolean seeBorrowed = true;
+    private boolean seeBorrowed = false;
+    private TicketManagement ticketManagement;
 
     public static void setLatestShelfId(int latestShelfId) {
         BookManagement.latestShelfId = latestShelfId;
+    }
+
+    public void setTicketManagement(TicketManagement ticketManagement) {
+        this.ticketManagement = ticketManagement;
     }
 
     private static BookManagement instance;
@@ -52,14 +57,56 @@ public class BookManagement implements ISaveLoad, IMenu {
     }
 
 //    region Generic Menu Impl
-    private void byIDMenu(BiConsumer<ArrayList<AbstractMap.SimpleImmutableEntry<Shelf, Book>>, String> biConsumer) {
+    private void byBookID(BiConsumer<ArrayList<AbstractMap.SimpleImmutableEntry<Shelf, Book>>, String> biConsumer) {
         String id = new NString("ID").getFromInput().getValue();
         var shelfBookPairList =
                 findBook(book -> book.getID().toUpperCase(Locale.ROOT).contains(id.toUpperCase(Locale.ROOT)));
         biConsumer.accept(shelfBookPairList, "Theo thể loại " + id);
     }
 
-    private void byBookType(EBookType bookType, BiConsumer<ArrayList<AbstractMap.SimpleImmutableEntry<Shelf, Book>>, String> biConsumer) {
+
+
+    private void byBookAll(BiConsumer<ArrayList<AbstractMap.SimpleImmutableEntry<Shelf, Book>>, String> biConsumer) {
+        var shelfBookPairList = findBook(book -> true);
+        biConsumer.accept(shelfBookPairList, "Toan bo");
+    }
+
+    private void byBookFromAuthor(BiConsumer<ArrayList<AbstractMap.SimpleImmutableEntry<Shelf, Book>>, String> biConsumer) {
+        String name = new NString("tên tác giả").getFromInput().getValue();
+        var shelfBookPairList =
+                findBook(book -> book.getAuthorName().toUpperCase(Locale.ROOT).contains(name.toUpperCase(Locale.ROOT)));
+        biConsumer.accept(shelfBookPairList, "Theo Tac Gia: " + name);
+    }
+
+    private void byBookFromAge(BiConsumer<ArrayList<AbstractMap.SimpleImmutableEntry<Shelf, Book>>, String> biConsumer) {
+        Integer ratedAge = new NInteger("tuổi gợi ý").getFromInput().getValue();
+        var shelfBookPairList =
+                findBook(book -> book.getRatedAge() <= ratedAge);
+        biConsumer.accept(shelfBookPairList, "Theo Tuổi Gợi Ý: " + ratedAge);
+    }
+
+    private int intAnyAge(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
+    private void byBookAny(BiConsumer<ArrayList<AbstractMap.SimpleImmutableEntry<Shelf, Book>>, String> biConsumer) {
+        String value = new NString("giá trị").getFromInput().getValue();
+        var shelfBookPairList =
+                findBook(book ->
+                        book.getID().toUpperCase(Locale.ROOT).contains(value.toUpperCase(Locale.ROOT)) ||
+                                book.getBookName().toUpperCase(Locale.ROOT).contains(value.toUpperCase(Locale.ROOT)) ||
+                                book.getAuthorName().toUpperCase(Locale.ROOT).contains(value.toUpperCase(Locale.ROOT)) ||
+                                book.getRatedAge() <= intAnyAge(value)
+                );
+        biConsumer.accept(shelfBookPairList, "Theo bất kỳ với: " + value);
+    }
+
+
+    private void byBookTypeMenu(EBookType bookType, BiConsumer<ArrayList<AbstractMap.SimpleImmutableEntry<Shelf, Book>>, String> biConsumer) {
         var shelfBookPairList = findBook(book -> book.getMainType().equals(bookType) || book.getSubType().equals(bookType));
         biConsumer.accept(shelfBookPairList, "Theo thể loại " + bookType);
     }
@@ -73,7 +120,7 @@ public class BookManagement implements ISaveLoad, IMenu {
         menu.show();
     }
 
-    private void byNameMenu(BiConsumer<ArrayList<AbstractMap.SimpleImmutableEntry<Shelf, Book>>, String> biConsumer) {
+    private void byBookName(BiConsumer<ArrayList<AbstractMap.SimpleImmutableEntry<Shelf, Book>>, String> biConsumer) {
         String name = new NString("tên sách").getFromInput().getValue();
         var shelfBookPairList =
                 findBook(book -> book.getBookName().toUpperCase(Locale.ROOT).contains(name.toUpperCase(Locale.ROOT)));
@@ -90,7 +137,14 @@ public class BookManagement implements ISaveLoad, IMenu {
         for (var shelf: shelves) {
             for (var book: shelf.getBooks()) {
                 if (compareFunc.apply(book)) {
-                    shelfBookPairList.add(new AbstractMap.SimpleImmutableEntry<>(shelf, book));
+                    if (seeBorrowed) {
+                        shelfBookPairList.add(new AbstractMap.SimpleImmutableEntry<>(shelf, book));
+                    }
+                    else {
+                        if (!ticketManagement.isBorrowed(book)) {
+                            shelfBookPairList.add(new AbstractMap.SimpleImmutableEntry<>(shelf, book));
+                        }
+                    }
                 }
             }
         }
@@ -98,19 +152,8 @@ public class BookManagement implements ISaveLoad, IMenu {
     }
 
 
-    private void findBookAll() {
-        RunnableMenu menu = new RunnableMenu("Toàn bộ");
 
-        for (var shelf : shelves) {
-            for (var book : shelf.getBooks()) {
-                menu.add(book.getBookName(), ()->{
-                    System.out.printf("Sách %s, tại kệ %s\n", book.getBookName(), shelf.getShelfName());
-                });
-            }
-        }
 
-        menu.show();
-    }
     private void findBookMenu(ArrayList<AbstractMap.SimpleImmutableEntry<Shelf, Book>> shelfBookPairList, String name) {
         RunnableMenu menu = new RunnableMenu(name);
 
@@ -124,68 +167,23 @@ public class BookManagement implements ISaveLoad, IMenu {
     }
 
     private void findByBookType(EBookType bookType) {
-        byBookType(bookType, this::findBookMenu);
+        byBookTypeMenu(bookType, this::findBookMenu);
     }
 
     private void findBookFromBookTypeMenu() {
         byBookTypeMenu(this::findByBookType);
     }
 
-    private void findBookFromBookIDMenu() {
-        byIDMenu(this::findBookMenu);
-    }
-
-    private void findBookFromBookNameMenu() {
-        byNameMenu(this::findBookMenu);
-
-
-    }
-
-    private void findBookFromAuthorNameMenu() {
-        String name = new NString("tên tác giả").getFromInput().getValue();
-        var shelfBookPairList =
-                findBook(book -> book.getAuthorName().toUpperCase(Locale.ROOT).contains(name.toUpperCase(Locale.ROOT)));
-        findBookMenu(shelfBookPairList, "Theo Tác Giả: " + name);
-    }
-
-    private void findBookFromAgeMenu() {
-        Integer ratedAge = new NInteger("tuổi gợi ý").getFromInput().getValue();
-        var shelfBookPairList =
-                findBook(book -> book.getRatedAge() <= ratedAge);
-        findBookMenu(shelfBookPairList, "Theo Tuổi Gợi Ý: " + ratedAge);
-    }
-
-    private int intAnyAge(String value) {
-        try {
-            return Integer.parseInt(value);
-        } catch (NumberFormatException e) {
-            return -1;
-        }
-    }
-
-    private void findBookAnyMenu() {
-        String value = new NString("giá trị").getFromInput().getValue();
-        var shelfBookPairList =
-                findBook(book ->
-                    book.getID().toUpperCase(Locale.ROOT).contains(value.toUpperCase(Locale.ROOT)) ||
-                    book.getBookName().toUpperCase(Locale.ROOT).contains(value.toUpperCase(Locale.ROOT)) ||
-                    book.getAuthorName().toUpperCase(Locale.ROOT).contains(value.toUpperCase(Locale.ROOT)) ||
-                    book.getRatedAge() <= intAnyAge(value)
-                    );
-        findBookMenu(shelfBookPairList, "Theo bất kỳ với: " + value);
-    }
-
-
 
     public void findBookFromInput() {
-        RunnableMenu menu = new RunnableMenu("Tìm sách");
-        menu.add("Toàn bộ", this::findBookAll);
-        menu.add("Theo ID", this::findBookFromBookIDMenu);
+        RunnableMenu menu = new RunnableMenu("Xoa sách");
+        menu.add("Toàn bộ", ()->byBookAll(this::findBookMenu));
+        menu.add("Theo ID", ()->byBookID(this::findBookMenu));
         menu.add("Theo thể loại", this::findBookFromBookTypeMenu);
-        menu.add("Theo tên sách", this::findBookFromBookNameMenu);
-        menu.add("Theo tên tác giả", this::findBookFromAuthorNameMenu);
-        menu.add("Theo độ tuổi", this::findBookFromAgeMenu);
-        menu.add("Theo bất kỳ", this::findBookAnyMenu);
+        menu.add("Theo tên sách", ()->byBookName(this::findBookMenu));
+        menu.add("Theo tên tác giả", ()->byBookFromAuthor(this::findBookMenu));
+        menu.add("Theo độ tuổi", ()->byBookFromAge(this::findBookMenu));
+        menu.add("Theo bất kỳ", ()->byBookAny(this::findBookMenu));
         menu.show();
     }
 //    endregion
@@ -226,20 +224,7 @@ public class BookManagement implements ISaveLoad, IMenu {
 //    region DELETE BOOK
 //    region BY BOOK
 //    region BY BOOK IMPL
-    private void deleteBookAll() {
-        RunnableMenu menu = new RunnableMenu("Toàn bộ");
-        menu.setRunOnce(true);
 
-        for (var shelf : shelves) {
-            for (var book : shelf.getBooks()) {
-                menu.add(book.getBookName(), ()->{
-                    shelf.removeBook(book);
-                });
-            }
-        }
-
-        menu.show();
-    }
     private void deleteBookMenu(ArrayList<AbstractMap.SimpleImmutableEntry<Shelf, Book>> shelfBookPairList, String name) {
         RunnableMenu menu = new RunnableMenu(name);
         menu.setRunOnce(true);
@@ -247,7 +232,6 @@ public class BookManagement implements ISaveLoad, IMenu {
         for (var shelfBookPair : shelfBookPairList) {
             menu.add(String.valueOf(shelfBookPair.getValue().getBookName()), ()->{
                 shelfBookPair.getKey().removeBook(shelfBookPair.getValue());
-                menu.removeItem(String.valueOf(shelfBookPair.getValue().getBookName()));
             });
         }
 
@@ -255,78 +239,74 @@ public class BookManagement implements ISaveLoad, IMenu {
     }
 
     private void deleteByBookType(EBookType bookType) {
-        var shelfBookPairList = findBook(book -> book.getMainType().equals(bookType) || book.getSubType().equals(bookType));
-
-        deleteBookMenu(shelfBookPairList, "Theo thể loại " + bookType);
+        byBookTypeMenu(bookType, this::deleteBookMenu);
     }
 
     private void deleteBookFromBookTypeMenu() {
-        RunnableMenu menu = new RunnableMenu("Theo thể loại");
-        menu.add("Tâm Lý", () -> deleteByBookType(EBookType.TAM_LY));
-        menu.add("Thiếu Nhi", () -> deleteByBookType(EBookType.THIEU_NHI));
-        menu.add("Tiểu Thuyết", () -> deleteByBookType(EBookType.TIEU_THUYET));
-        menu.add("Văn Học", () -> deleteByBookType(EBookType.VAN_HOC));
-        menu.show();
-    }
-
-    private void deleteBookFromBookIDMenu() {
-        String id = new NString("ID").getFromInput().getValue();
-        var shelfBookPairList =
-                findBook(book -> book.getID().toUpperCase(Locale.ROOT).contains(id.toUpperCase(Locale.ROOT)));
-        deleteBookMenu(shelfBookPairList, "Theo Tên " + id);
-    }
-
-    private void deleteBookFromBookNameMenu() {
-        String name = new NString("tên sách").getFromInput().getValue();
-        var shelfBookPairList =
-                findBook(book -> book.getBookName().toUpperCase(Locale.ROOT).contains(name.toUpperCase(Locale.ROOT)));
-        deleteBookMenu(shelfBookPairList, "Theo Tên " + name);
-    }
-
-    private void deleteBookFromAuthorNameMenu() {
-        String name = new NString("tên tác giả").getFromInput().getValue();
-        var shelfBookPairList =
-                findBook(book -> book.getAuthorName().toUpperCase(Locale.ROOT).contains(name.toUpperCase(Locale.ROOT)));
-        deleteBookMenu(shelfBookPairList, "Theo Tác Giả: " + name);
-    }
-
-    private void deleteBookFromAgeMenu() {
-        Integer ratedAge = new NInteger("tuổi gợi ý").getFromInput().getValue();
-        var shelfBookPairList =
-                findBook(book -> book.getRatedAge() <= ratedAge);
-        deleteBookMenu(shelfBookPairList, "Theo Tuổi Gợi Ý: " + ratedAge);
-    }
-
-    private void deleteBookAnyMenu() {
-        String value = new NString("giá trị").getFromInput().getValue();
-        var shelfBookPairList =
-                findBook(book ->
-                        book.getID().toUpperCase(Locale.ROOT).contains(value.toUpperCase(Locale.ROOT)) ||
-                                book.getBookName().toUpperCase(Locale.ROOT).contains(value.toUpperCase(Locale.ROOT)) ||
-                                book.getAuthorName().toUpperCase(Locale.ROOT).contains(value.toUpperCase(Locale.ROOT)) ||
-                                book.getRatedAge() <= intAnyAge(value)
-                );
-        deleteBookMenu(shelfBookPairList, "Theo bất kỳ với: " + value);
+        byBookTypeMenu(this::deleteByBookType);
     }
 //    endregion
 
 //    region DELETE BY BOOK MENU
     public void deleteBookFromInput() {
         RunnableMenu menu = new RunnableMenu("Xoa sách");
-        menu.add("Toàn bộ", this::deleteBookAll);
-        menu.add("Theo ID", this::deleteBookFromBookIDMenu);
+        menu.add("Toàn bộ", ()->byBookAll(this::deleteBookMenu));
+        menu.add("Theo ID", ()->byBookID(this::deleteBookMenu));
         menu.add("Theo thể loại", this::deleteBookFromBookTypeMenu);
-        menu.add("Theo tên sách", this::deleteBookFromBookNameMenu);
-        menu.add("Theo tên tác giả", this::deleteBookFromAuthorNameMenu);
-        menu.add("Theo độ tuổi", this::deleteBookFromAgeMenu);
-        menu.add("Theo bất kỳ", this::deleteBookAnyMenu);
+        menu.add("Theo tên sách", ()->byBookName(this::deleteBookMenu));
+        menu.add("Theo tên tác giả", ()->byBookFromAuthor(this::deleteBookMenu));
+        menu.add("Theo độ tuổi", ()->byBookFromAge(this::deleteBookMenu));
+        menu.add("Theo bất kỳ", ()->byBookAny(this::deleteBookMenu));
         menu.show();
     }
     //    endregion
 
 //    endregion
+//endregion
 
 
+//    region EDIT BOOK
+//    region BY BOOK
+//    region BY BOOK IMPL
+
+    private void editBookMenu(ArrayList<AbstractMap.SimpleImmutableEntry<Shelf, Book>> shelfBookPairList, String name) {
+        RunnableMenu menu = new RunnableMenu(name);
+        menu.setRunOnce(true);
+
+        for (var shelfBookPair : shelfBookPairList) {
+            menu.add(String.valueOf(shelfBookPair.getValue().getBookName()), ()->{
+                shelfBookPair.getValue().setFromInput();
+            });
+        }
+
+        menu.show();
+    }
+
+    private void editByBookType(EBookType bookType) {
+        byBookTypeMenu(bookType, this::deleteBookMenu);
+    }
+
+    private void editBookFromBookTypeMenu() {
+        byBookTypeMenu(this::deleteByBookType);
+    }
+//    endregion
+
+    //    region DELETE BY BOOK MENU
+    public void editBookFromInput() {
+        RunnableMenu menu = new RunnableMenu("Sua sách");
+        menu.add("Toàn bộ", ()->byBookAll(this::editBookMenu));
+        menu.add("Theo ID", ()->byBookID(this::editBookMenu));
+        menu.add("Theo thể loại", this::editBookFromBookTypeMenu);
+        menu.add("Theo tên sách", ()->byBookName(this::editBookMenu));
+        menu.add("Theo tên tác giả", ()->byBookFromAuthor(this::editBookMenu));
+        menu.add("Theo độ tuổi", ()->byBookFromAge(this::editBookMenu));
+        menu.add("Theo bất kỳ", ()->byBookAny(this::editBookMenu));
+        menu.show();
+    }
+    //    endregion
+
+//    endregion
+//endregion
 
 
 //    region BY SHELF IMPL
@@ -334,7 +314,8 @@ public class BookManagement implements ISaveLoad, IMenu {
         RunnableMenu menu = new RunnableMenu("Xoa sach trong ke " + shelf.getShelfName());
         menu.setRunOnce(true);
         for (var book : shelf.getBooks()) {
-            menu.add(book.getBookName(), ()->shelf.removeBook(book));
+            if (!ticketManagement.isBorrowed(book))
+                menu.add(book.getBookName(), ()->shelf.removeBook(book));
         }
         menu.show();
     }
@@ -342,12 +323,10 @@ public class BookManagement implements ISaveLoad, IMenu {
     public void deleteBookFromShelfInMenu() {
         RunnableMenu menu = new RunnableMenu("Xoa sach");
         for (var shelf : shelves) {
-            menu.add("Ke " + shelf.getShelfName() + ", ID: " + shelf.getShelfID(), ()->moveBookInShelf(shelf));
+            menu.add("Ke " + shelf.getShelfName() + ", ID: " + shelf.getShelfID(), ()->deleteBookInShelf(shelf));
         }
         menu.show();
     }
-
-//    endregion
 
     public void deleteBookFromMenu(){
         RunnableMenu menu = new RunnableMenu("Xoa sach");
@@ -356,7 +335,6 @@ public class BookManagement implements ISaveLoad, IMenu {
         menu.show();
     }
 //    endregion
-
 
 //    region SHELF
     public void setShelves(ArrayList<Shelf> shelves) {
@@ -457,8 +435,6 @@ public class BookManagement implements ISaveLoad, IMenu {
 
 
 
-
-
 //    TODO Impl change book.
     @Override
     public void menu() {
@@ -475,9 +451,14 @@ public class BookManagement implements ISaveLoad, IMenu {
         menu.add("Thêm sách", this::addBookByInput);
         menu.add("Thêm Kệ", this::addShelfByInput);
 
+        menu.addSection("Sua");
+        menu.add("Sua sach",this::editBookFromInput);
+        menu.add("Sua ke",()->{});
+
         menu.addSection("Xóa");
         menu.add("Xóa sách", this::deleteBookFromMenu);
         menu.add("Xóa kệ", this::deleteShelfByMenu);
+
 
         menu.addSection("Cai dat");
         menu.add("Bật/Tắt xem sách đã mượn", ()->{

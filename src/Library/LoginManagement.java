@@ -57,10 +57,7 @@ public class LoginManagement implements ISaveLoad, IMenu {
         menu.addSection("Chức vụ phục vụ");
         menu.add("Tìm vị trí sách", bookManagement::findBookFromInput);
         menu.addSection("Quản lý tài khoản");
-        menu.add("Chỉnh tên tài khoản", ()->{});
-        menu.add("Chỉnh mật khẩu", ()->{});
-        menu.add("Chỉnh tên", ()->{});
-        menu.add("Xuất thông tin", ()->{});
+        menu.add("Chỉnh tài khoản", user::changePropertyMenu);
 
         menu.show();
 
@@ -69,15 +66,11 @@ public class LoginManagement implements ISaveLoad, IMenu {
     public void generateMenuThuKy(StaffUser user) {
         RunnableMenu menu = new RunnableMenu("Thư Ký");
         menu.addSection("Chức vụ thư ký");
-        menu.add("Quản lý khách hàng", ()->{});
-        menu.add("Quản lý sách", ()->{});
-        menu.add("Quản lý mượn sách", ()->{});
+        menu.add("Quản lý khách hàng", customerManagement::menu);
+        menu.add("Quản lý sách", bookManagement::menu);
+        menu.add("Quản lý mượn sách", ticketManagement::menu);
         menu.addSection("Quản lý tài khoản");
-        menu.add("Chỉnh tên tài khoản", ()->{});
-        menu.add("Chỉnh mật khẩu", ()->{});
-        menu.add("Chỉnh tên", ()->{});
-        menu.add("Xuất thông tin", ()->{});
-
+        menu.add("Chỉnh tài khoản", user::changePropertyMenu);
         menu.show();
 
     }
@@ -105,6 +98,11 @@ public class LoginManagement implements ISaveLoad, IMenu {
     }
 
     public void menu() {
+        ticketManagement.setBookManagement(bookManagement);
+        ticketManagement.setCustomerManagement(customerManagement);
+
+        bookManagement.setTicketManagement(ticketManagement);
+
         RunnableMenu menu = new RunnableMenu("Login Menu");
         menu.addBackgroundTask(this::save);
 

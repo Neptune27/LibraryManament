@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Objects;
 
 public class Date implements Serializable {
     LocalDate date;
@@ -17,8 +18,25 @@ public class Date implements Serializable {
     }
 
     public Date plusDay(int dayToAdd) {
-        date.plusDays(dayToAdd);
+        date = date.plusDays(dayToAdd);
         return this;
+    }
+
+    public int compareTo(Date dateToCompare) {
+        return date.compareTo(dateToCompare.date);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Date date1 = (Date) o;
+        return Objects.equals(date, date1.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(date);
     }
 
     public Date(String s){

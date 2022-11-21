@@ -213,6 +213,10 @@ public class CustomerManagement implements ISaveLoad, IMenu {
 
 //    endregion
 
+    public void statistic() {
+
+    }
+
     @Override
     public void menu() {
         RunnableMenu menu = new RunnableMenu("Quan Ly Khach Hang");
@@ -220,7 +224,7 @@ public class CustomerManagement implements ISaveLoad, IMenu {
         menu.add("Thêm khách hàng", this::addCustomerMenu);
         menu.add("Chỉnh sửa khách hàng", this::changeCustomerMenu);
         menu.add("Xóa khách hàng", this::removeCustomerMenu);
-//        menu.add("Thống kê");
+        menu.add("Thống kê", this::statistic);
         menu.show();
     }
 
