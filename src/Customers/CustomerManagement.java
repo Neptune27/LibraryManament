@@ -36,7 +36,7 @@ public class CustomerManagement implements ISaveLoad, IMenu {
         return latestCustomerId;
     }
 
-// region SAVE LOAD
+    // region SAVE LOAD
     @Override
     public void save() {
         File file = new File("./src/Data/Customer.bin");
@@ -151,7 +151,7 @@ public class CustomerManagement implements ISaveLoad, IMenu {
 
 //    endregion
 
-//    region GET CUSTOMER
+    //    region GET CUSTOMER
     public Customer getCustomerMenu() {
         final Customer[] customerToGet = new Customer[1];
         RunnableMenu menu = new RunnableMenu("Khach Hang");
@@ -208,13 +208,48 @@ public class CustomerManagement implements ISaveLoad, IMenu {
         menu.add("Thay bằng tuổi", this::removeByAgeMenu);
 
         menu.show();
-
     }
-
+    public void findByNameMenu(){
+        String name = new NString("tên").getFromInput().getValue();
+        System.out.printf("|%-6s|%-25s|%-15s|%-11s|%-4s|%-26s\n","ID","Họ tên","Giới tính","SĐT","Tuổi","Địa chỉ");
+        for (Customer cus:customers){
+            if (cus.getName().contains(name)){
+                System.out.printf("|%-6s|%-25s|%-15s|%-11s|%-4s|%-26s\n",cus.getId(),cus.getName(),cus.getSex(),cus.getPhoneNumber(),cus.getAge(),cus.getAddress());
+            }
+        }
+    }
+    public void findByIDMenu(){
+        int id = new NInteger("id").getFromInput().getValue();
+        System.out.printf("|%-6s|%-25s|%-15s|%-11s|%-4s|%-26s\n","ID","Họ tên","Giới tính","SĐT","Tuổi","Địa chỉ");
+        for (Customer cus:customers){
+            if (cus.getId() == id){
+                System.out.printf("|%-6s|%-25s|%-15s|%-11s|%-4s|%-26s\n",cus.getId(),cus.getName(),cus.getSex(),cus.getPhoneNumber(),cus.getAge(),cus.getAddress());
+            }
+        }
+    }
+    public void findByAgeMenu(){
+        int age = new NInteger("age").getFromInput().getValue();
+        System.out.printf("|%-6s|%-25s|%-15s|%-11s|%-4s|%-26s\n","ID","Họ tên","Giới tính","SĐT","Tuổi","Địa chỉ");
+        for (Customer cus:customers){
+            if (cus.getAge() == age){
+                System.out.printf("|%-6s|%-25s|%-15s|%-11s|%-4s|%-26s\n",cus.getId(),cus.getName(),cus.getSex(),cus.getPhoneNumber(),cus.getAge(),cus.getAddress());
+            }
+        }
+    }
+    public void findCustomerMenu(){
+        RunnableMenu menu = new RunnableMenu("Tìm kiếm");
+        menu.add("Theo tên",this::findByNameMenu);
+        menu.add("Theo id",this::findByIDMenu);
+        menu.add("Theo tuổi",this::findByAgeMenu);
+        menu.show();
+    }
 //    endregion
 
     public void statistic() {
-
+        System.out.printf("|%-6s|%-25s|%-15s|%-11s|%-4s|%-26s\n","ID","Họ tên","Giới tính","SĐT","Tuổi","Địa chỉ");
+        for (Customer cus:customers){
+            System.out.printf("|%-6s|%-25s|%-15s|%-11s|%-4s|%-26s\n",cus.getId(),cus.getName(),cus.getSex(),cus.getPhoneNumber(),cus.getAge(),cus.getAddress());
+        }
     }
 
     @Override
@@ -224,6 +259,7 @@ public class CustomerManagement implements ISaveLoad, IMenu {
         menu.add("Thêm khách hàng", this::addCustomerMenu);
         menu.add("Chỉnh sửa khách hàng", this::changeCustomerMenu);
         menu.add("Xóa khách hàng", this::removeCustomerMenu);
+        menu.add("Tìm khách hàng",this::findCustomerMenu);
         menu.add("Thống kê", this::statistic);
         menu.show();
     }
