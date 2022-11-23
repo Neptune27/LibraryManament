@@ -9,7 +9,7 @@ public class HINHCHUNHAT implements IMenu {
     double width;
 
     final NDouble heightInput = new NDouble("Height");
-    final NDouble widthInput = new NDouble("Width");
+    final NDouble widthInput = new NDouble("Wacswqidth");
 
     public HINHCHUNHAT() {
     }
@@ -47,7 +47,7 @@ public class HINHCHUNHAT implements IMenu {
     }
 
     @Override
-    public void generateMenu() {
+    public void menu() {
         RunnableMenu menu = new RunnableMenu();
         menu.add("Input", this::input);
         menu.add("Show Property", this::printProperty);
@@ -60,7 +60,7 @@ public class HINHCHUNHAT implements IMenu {
     public static void main(String[] args) {
         RunnableMenu menu = new RunnableMenu();
         HINHCHUNHAT hcn = new HINHCHUNHAT();
-        menu.add("HCM", hcn::generateMenu);
+        menu.add("HCM", hcn::menu);
         menu.add("Print Hello world inline", ()-> System.out.println("Hello World!"));
         menu.add("Disable Press Enter", ()->menu.setPauseNext(false));
         System.out.println("Hello Word");
