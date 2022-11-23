@@ -1,7 +1,7 @@
 package User;
 
 import General.Common.ISaveLoad;
-import General.Customer.Date;
+import General.Common.Date;
 import General.Input.NInteger;
 import General.Input.NString;
 import General.Menu.IMenu;
