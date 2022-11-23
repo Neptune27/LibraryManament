@@ -52,7 +52,7 @@ public class TicketManagement implements ISaveLoad, IMenu {
         var now = new Date();
         for (var ticket : tickets) {
             if (Objects.equals(ticket.getBookID(), book.getID())) {
-                int val = now.compareTo(ticket.getExpiredDate());
+                var val = now.compareTo(ticket.getExpiredDate());
                 if (val < 0) {
                     return true;
                 }

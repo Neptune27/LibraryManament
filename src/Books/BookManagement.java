@@ -435,7 +435,8 @@ public class BookManagement implements ISaveLoad, IMenu {
 
 
 
-//    TODO Impl change book.
+//    TODO Impl change shelf.
+//    TODO Impl erroring when book have the same ID
     @Override
     public void menu() {
         RunnableMenu menu = new RunnableMenu("Quản lý sách");

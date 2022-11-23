@@ -22,9 +22,10 @@ public class Date implements Serializable {
         return this;
     }
 
-    public int compareTo(Date dateToCompare) {
-        return date.compareTo(dateToCompare.date);
+    public double compareTo(Date dateToCompare) {
+        return date.toEpochDay() - dateToCompare.date.toEpochDay();
     }
+
 
     @Override
     public boolean equals(Object o) {

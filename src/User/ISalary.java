@@ -1,9 +1,12 @@
 package User;
 
+import java.util.ArrayList;
+
 //Maybe them cap bac luong
 public interface ISalary {
-    public double salary();
-    public double bonus();
-    public double totalSalary();
-    public void printSalary();
+
+    ArrayList<Double> getHeSo();
+    long getSalary();
+    void updateBonus();
+    long getTotalSalary();
 }

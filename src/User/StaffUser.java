@@ -2,6 +2,7 @@ package User;
 
 import General.Customer.Date;
 import General.Input.NDate;
+import General.Input.NDouble;
 import General.Input.NInteger;
 import General.Input.NString;
 import General.Menu.IMenu;
@@ -16,6 +17,8 @@ public abstract class StaffUser extends Person implements IMenu, ISalary {
     private int dayLeave;
     private EWorkShift workShift;
     private Date workStartDay;
+    private double salary;
+    private double bonus;
 
     public StaffUser() {
 
@@ -121,6 +124,7 @@ public abstract class StaffUser extends Person implements IMenu, ISalary {
         setWorkShiftFromInput();
         setDayLeave(new NInteger("ngày nghỉ").getFromInput().getValue());
         workStartDay = new NDate("ngày bắt đầu làm việc (dd-mm-yyyy)").getFromInput().getValue();
+        salary = new NDouble("luong").getFromInput().getValue();
     }
 
     @Override
@@ -165,5 +169,37 @@ public abstract class StaffUser extends Person implements IMenu, ISalary {
                 ", " + username +
                 ", " + getName() +
                 ", " + getAge();
+    }
+
+
+    @Override
+    public void updateBonus() {
+        if (getRanking() == ERanking.A) {
+            bonus = getSalary() * 0.05;
+        }
+        else {
+            bonus = 0;
+        }
+    }
+
+    public long getSalary() {
+        var heSo = getHeSo();
+        int max = heSo.size();
+        var hsIndex = (new Date()).compareTo(workStartDay) / 365;
+        if (hsIndex >= max) {
+            return (long) (salary * heSo.get(max-1));
+        }
+        return (long) (salary * heSo.get((int) hsIndex));
+
+    }
+
+    public double getBonus() {
+        updateBonus();
+        return bonus;
+    }
+
+    @Override
+    public long getTotalSalary() {
+        return (long) (getSalary() + getBonus());
     }
 }

@@ -8,7 +8,9 @@ import User.ESex;
 public class Worker extends Customer{
     Address workPlace;
 
-    public Worker(){}
+    public Worker(){
+
+    }
 
     public Worker(String name, int age, ESex sex, String phoneNumber, Address address, int id, Address workPlace) {
         super(name, age, sex, phoneNumber, address, id, ECustomerType.WORKER);

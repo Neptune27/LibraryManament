@@ -1,7 +1,8 @@
 package User;
 
 import General.Customer.Date;
-import User.Errors.UsernameExistException;
+
+import java.util.ArrayList;
 
 public class AdminUser extends StaffUser {
 
@@ -12,12 +13,16 @@ public class AdminUser extends StaffUser {
 
     public AdminUser(){
         super();
+
     };
+
     @Override
     public void setFromInput() {
         super.setFromInput();
         setPermission(EPermission.ADMIN);
     }
+
+
 
     @Override
     public void menu() {
@@ -26,22 +31,13 @@ public class AdminUser extends StaffUser {
 
 
     @Override
-    public double salary() {
-        return 0;
-    }
-
-    @Override
-    public double bonus() {
-        return 0;
-    }
-
-    @Override
-    public double totalSalary() {
-        return 0;
-    }
-
-    @Override
-    public void printSalary() {
-
+    public ArrayList<Double> getHeSo() {
+        ArrayList<Double> heSo = new ArrayList<>();
+        heSo.add(1d);
+        heSo.add(1.5d);
+        heSo.add(2d);
+        heSo.add(2.5d);
+        heSo.add(3d);
+        return heSo;
     }
 }

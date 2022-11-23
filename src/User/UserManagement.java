@@ -14,9 +14,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
-//TODO Add 3 retry/Or not.
+
 public class UserManagement implements ISaveLoad, IMenu {
     public ArrayList<StaffUser> users = new ArrayList<>();
     private static int latestUserId = 0;
@@ -147,14 +146,25 @@ public class UserManagement implements ISaveLoad, IMenu {
         changeByFuncMenu("Ssername", staffUser -> staffUser.getUsername().toUpperCase(Locale.ROOT).contains(username.toUpperCase(Locale.ROOT)));
     }
 
-    public void changeUserMenu() {
+    public void statistic() {
+        System.out.println("===================================================================================================================================================================================================================================");
+        System.out.printf("|| %-5s || %-10s || %-20s || %-10s || %-3s || %-5s || %-11s || %-12s|| %-8s || %-10s || %-12s || %-4s || %-10s || %-50s ||\n",
+                "ID", "Username", "Name", "Permission", "Age", "Shift","Sex", "Day Leave","Salary", "Bonus", "Total", "Rank", "Phone", "Address");
+        for (var user : users) {
+            System.out.printf("|| %-5s || %-10s || %-20s || %-10s || %-3s || %-5s || %-11s || %-12s|| %-8s || %-10s || %-12s || %-4s || %-10s || %-50s ||\n",
+                    user.getId(), user.getUsername(), user.getName(), user.getPermission(), user.getAge(), user.getWorkShift(), user.getSex(), user.getDayLeave(),
+                    user.getSalary(), user.getBonus(), user.getTotalSalary(), user.getRanking(), user.getPhoneNumber(), user.getAddress());
+        }
+        System.out.println("===================================================================================================================================================================================================================================");
+    }
+
+    public void changeUserMenu() throws FileNotFoundException {
         RunnableMenu menu = new RunnableMenu("Thay đổi");
         menu.add("Tất cả", this::changeByAllMenu);
         menu.add("Thay bằng ID", this::changeByIDMenu);
         menu.add("Thay bằng tên", this::changeByNameMenu);
         menu.add("Thay bằng tuổi", this::changeByAgeMenu);
         menu.add("Thay bằng tên tài khoản", this::changeByUsernameMenu);
-
         menu.show();
 
     }
@@ -217,6 +227,7 @@ public class UserManagement implements ISaveLoad, IMenu {
         menu.addBackgroundTask(this::save);
         menu.add("Chỉnh tài khoản", this::changeUserMenu);
         menu.add("Thêm tài khoản", this::register);
+        menu.add("Thong ke", this::statistic);
         menu.show();
     }
 }

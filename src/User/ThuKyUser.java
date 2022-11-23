@@ -3,10 +3,13 @@ package User;
 import General.Customer.Date;
 import User.Errors.UsernameExistException;
 
+import java.util.ArrayList;
+
 public class ThuKyUser extends StaffUser {
 
     public ThuKyUser() {
         super();
+
     }
 
     public ThuKyUser(String name, int age, ESex sex, String phoneNumber, Address address, int id, String username, String password, int dayLeave, EWorkShift workShift, Date workStartDay) throws UsernameExistException {
@@ -24,24 +27,14 @@ public class ThuKyUser extends StaffUser {
 
     }
 
-
     @Override
-    public double salary() {
-        return 0;
-    }
-
-    @Override
-    public double bonus() {
-        return 0;
-    }
-
-    @Override
-    public double totalSalary() {
-        return 0;
-    }
-
-    @Override
-    public void printSalary() {
-
+    public ArrayList<Double> getHeSo() {
+        ArrayList<Double> heSo = new ArrayList<>();
+        heSo.add(1d);
+        heSo.add(1.4d);
+        heSo.add(1.8d);
+        heSo.add(2.4d);
+        heSo.add(3d);
+        return heSo;
     }
 }
