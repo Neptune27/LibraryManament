@@ -72,11 +72,24 @@ public class UserManagement implements ISaveLoad, IMenu {
         users.add(phucVuUser);
     }
 
-    public void addMenuUserFromInput() throws RuntimeException{
+    public void deleteUsers() throws UsernameExistException {
+        int iD = new NInteger("ID").getFromInput().getValue();
+        if (isIDExist(iD))
+            for (var staffUser : users) {
+                if(staffUser.getId()==iD) {
+                    users.remove(staffUser);
+                    return;
+                }
+            }
+        System.out.println("Tài khoản không tồn tại");
+    }
+
+
+    public void addMenuUserFromInput() throws RuntimeException {
         RunnableMenu menu = new RunnableMenu("Thêm tài khoản");
-        menu.add("Thêm Phục Vụ",this::addPhucVuFromInput);
-        menu.add("Thêm Thư Ký",this::addThuKyFromInput);
-        menu.add("Thêm Quản Lý",this::addAdminFromInput);
+        menu.add("Thêm Phục Vụ", this::addPhucVuFromInput);
+        menu.add("Thêm Thư Ký", this::addThuKyFromInput);
+        menu.add("Thêm Quản Lý", this::addAdminFromInput);
         menu.show();
     }
 
@@ -102,6 +115,10 @@ public class UserManagement implements ISaveLoad, IMenu {
         return users.stream().filter(user -> user.getUsername().equals(username)).toList().size() > 0;
     }
 
+    public boolean isIDExist(int iD) {
+        return users.stream().filter(user -> user.getId() == iD).toList().size() > 0;
+    }
+
     void register() {
         try {
             addMenuUserFromInput();
@@ -110,13 +127,21 @@ public class UserManagement implements ISaveLoad, IMenu {
         }
     }
 
+//    void delete() {
+//        try {
+//            addMenuUserFromInput();
+//        } catch (RuntimeException e) {
+//            System.out.println("Tên tk đã tồn tại");
+//        }
+//    }
+
 //    region CHANGE USER
 
     private void changeByFuncMenu(String menuName, Function<StaffUser, Boolean> function) {
         var validUsers = users.stream().filter(function::apply).toList();
         RunnableMenu menu = new RunnableMenu(menuName);
         menu.setRunOnce(true);
-        for (var user: validUsers) {
+        for (var user : validUsers) {
             menu.add(user.getBasicInfo(), user::changePropertyMenu);
         }
         menu.show();
@@ -149,7 +174,7 @@ public class UserManagement implements ISaveLoad, IMenu {
     public void statistic() {
         System.out.println("===================================================================================================================================================================================================================================");
         System.out.printf("|| %-5s || %-10s || %-20s || %-10s || %-3s || %-5s || %-11s || %-12s|| %-8s || %-10s || %-12s || %-4s || %-10s || %-50s ||\n",
-                "ID", "Username", "Name", "Permission", "Age", "Shift","Sex", "Day Leave","Salary", "Bonus", "Total", "Rank", "Phone", "Address");
+                "ID", "Username", "Name", "Permission", "Age", "Shift", "Sex", "Day Leave", "Salary", "Bonus", "Total", "Rank", "Phone", "Address");
         for (var user : users) {
             System.out.printf("|| %-5s || %-10s || %-20s || %-10s || %-3s || %-5s || %-11s || %-12s|| %-8s || %-10s || %-12s || %-4s || %-10s || %-50s ||\n",
                     user.getId(), user.getUsername(), user.getName(), user.getPermission(), user.getAge(), user.getWorkShift(), user.getSex(), user.getDayLeave(),
@@ -171,7 +196,7 @@ public class UserManagement implements ISaveLoad, IMenu {
 
 //    endregion
 
-//region SAVE LOAD
+    //region SAVE LOAD
     public void save() {
         File file = new File("./src/Data/User.bin");
         FileOutputStream fos = null;
@@ -210,8 +235,7 @@ public class UserManagement implements ISaveLoad, IMenu {
             fis.close();
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             if (users.isEmpty()) {
                 addAdminDefault();
             }
@@ -227,6 +251,7 @@ public class UserManagement implements ISaveLoad, IMenu {
         menu.addBackgroundTask(this::save);
         menu.add("Chỉnh tài khoản", this::changeUserMenu);
         menu.add("Thêm tài khoản", this::register);
+        menu.add("Xoá tài khoản", this::deleteUsers);
         menu.add("Thong ke", this::statistic);
         menu.show();
     }
