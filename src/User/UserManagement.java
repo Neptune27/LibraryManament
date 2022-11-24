@@ -1,5 +1,6 @@
 package User;
 
+import Customers.Customer;
 import General.Common.ISaveLoad;
 import General.Common.Date;
 import General.Input.NInteger;
@@ -72,17 +73,6 @@ public class UserManagement implements ISaveLoad, IMenu {
         users.add(phucVuUser);
     }
 
-    public void deleteUsers() throws UsernameExistException {
-        int iD = new NInteger("ID").getFromInput().getValue();
-        if (isIDExist(iD))
-            for (var staffUser : users) {
-                if(staffUser.getId()==iD) {
-                    users.remove(staffUser);
-                    return;
-                }
-            }
-        System.out.println("Tài khoản không tồn tại");
-    }
 
 
     public void addMenuUserFromInput() throws RuntimeException {
@@ -194,6 +184,52 @@ public class UserManagement implements ISaveLoad, IMenu {
 
     }
 
+    private void deleteByAllMenu() {
+        deleteByFuncMenu("Tất cả", staffUser -> true);
+    }
+
+    private void deleteByIDMenu() {
+        int id = new NInteger("ID").getFromInput().getValue();
+        deleteByFuncMenu("ID", staffUser -> staffUser.getId() == id);
+    }
+
+    private void deleteByNameMenu() {
+        String name = new NString("tên").getFromInput().getValue();
+        deleteByFuncMenu("Tên", staffUser -> staffUser.getName().toUpperCase(Locale.ROOT).contains(name.toUpperCase(Locale.ROOT)));
+    }
+
+    private void deleteByAgeMenu() {
+        int age = new NInteger("tuổi").getFromInput().getValue();
+        deleteByFuncMenu("Tuổi", staffUser -> staffUser.getId() == age);
+    }
+
+    private void deleteByUsernameMenu() {
+        var username = new NString("username").getFromInput().getValue();
+        deleteByFuncMenu("Ssername", staffUser -> staffUser.getUsername().toUpperCase(Locale.ROOT).contains(username.toUpperCase(Locale.ROOT)));
+    }
+
+    private void deleteByFuncMenu(String menuName, Function<StaffUser, Boolean> function) {
+        var validUsers = users.stream().filter(function::apply).toList();
+        RunnableMenu menu = new RunnableMenu(menuName);
+        menu.setRunOnce(true);
+        for (var user : validUsers) {
+            menu.add(user.getBasicInfo(), ()->{
+                users.remove(user);
+            });
+        }
+        menu.show();
+    }
+    public void deleteUserMenu() throws FileNotFoundException {
+        RunnableMenu menu = new RunnableMenu("Thay đổi");
+        menu.add("Tất cả", this::deleteByAllMenu);
+        menu.add("Xoá bằng ID", this::deleteByIDMenu);
+        menu.add("Xoá bằng tên", this::deleteByNameMenu);
+        menu.add("Xoá bằng tuổi", this::deleteByAgeMenu);
+        menu.add("Xoá bằng tên tài khoản", this::deleteByUsernameMenu);
+        menu.show();
+
+    }
+
 //    endregion
 
     //region SAVE LOAD
@@ -251,7 +287,7 @@ public class UserManagement implements ISaveLoad, IMenu {
         menu.addBackgroundTask(this::save);
         menu.add("Chỉnh tài khoản", this::changeUserMenu);
         menu.add("Thêm tài khoản", this::register);
-        menu.add("Xoá tài khoản", this::deleteUsers);
+        menu.add("Xoá tài khoản", this::deleteUserMenu);
         menu.add("Thong ke", this::statistic);
         menu.show();
     }
