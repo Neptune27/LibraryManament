@@ -1,9 +1,8 @@
 package Books;
 
-import Customers.Customer;
 import Customers.CustomerManagement;
 import General.Common.ISaveLoad;
-import General.Customer.Date;
+import General.Common.Date;
 import General.Input.NInteger;
 import General.Menu.IMenu;
 import General.Menu.RunnableMenu;
@@ -133,7 +132,7 @@ public class TicketManagement implements ISaveLoad, IMenu {
         RunnableMenu menu = new RunnableMenu();
         menu.setRunOnce(true);
         for (var ticket : tickets) {
-            menu.add(String.format("ID: %i, Customer ID: %i, Book ID %s, Start: %s, End: %s",ticket.getTicketID(), ticket.getCustomerID(), ticket.getBookID(), ticket.getDateBorrowed(), ticket.getExpiredDate()),
+            menu.add(String.format("ID: %s, Customer ID: %s, Book ID %s, Start: %s, End: %s",ticket.getTicketID(), ticket.getCustomerID(), ticket.getBookID(), ticket.getDateBorrowed(), ticket.getExpiredDate()),
                     ()->tickets.remove(ticket));
         }
         menu.show();

@@ -1,6 +1,6 @@
 package General.Input;
 
-import General.Customer.Date;
+import General.Common.Date;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;

@@ -1,6 +1,6 @@
 package User;
 
-import General.Customer.Date;
+import General.Common.Date;
 import User.Errors.UsernameExistException;
 
 import java.util.ArrayList;

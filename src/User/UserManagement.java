@@ -1,7 +1,8 @@
 package User;
 
+import Customers.Customer;
 import General.Common.ISaveLoad;
-import General.Customer.Date;
+import General.Common.Date;
 import General.Input.NInteger;
 import General.Input.NString;
 import General.Menu.IMenu;
@@ -72,11 +73,13 @@ public class UserManagement implements ISaveLoad, IMenu {
         users.add(phucVuUser);
     }
 
-    public void addMenuUserFromInput() throws RuntimeException{
+
+
+    public void addMenuUserFromInput() throws RuntimeException {
         RunnableMenu menu = new RunnableMenu("Thêm tài khoản");
-        menu.add("Thêm Phục Vụ",this::addPhucVuFromInput);
-        menu.add("Thêm Thư Ký",this::addThuKyFromInput);
-        menu.add("Thêm Quản Lý",this::addAdminFromInput);
+        menu.add("Thêm Phục Vụ", this::addPhucVuFromInput);
+        menu.add("Thêm Thư Ký", this::addThuKyFromInput);
+        menu.add("Thêm Quản Lý", this::addAdminFromInput);
         menu.show();
     }
 
@@ -102,6 +105,10 @@ public class UserManagement implements ISaveLoad, IMenu {
         return users.stream().filter(user -> user.getUsername().equals(username)).toList().size() > 0;
     }
 
+    public boolean isIDExist(int iD) {
+        return users.stream().filter(user -> user.getId() == iD).toList().size() > 0;
+    }
+
     void register() {
         try {
             addMenuUserFromInput();
@@ -110,13 +117,21 @@ public class UserManagement implements ISaveLoad, IMenu {
         }
     }
 
+//    void delete() {
+//        try {
+//            addMenuUserFromInput();
+//        } catch (RuntimeException e) {
+//            System.out.println("Tên tk đã tồn tại");
+//        }
+//    }
+
 //    region CHANGE USER
 
     private void changeByFuncMenu(String menuName, Function<StaffUser, Boolean> function) {
         var validUsers = users.stream().filter(function::apply).toList();
         RunnableMenu menu = new RunnableMenu(menuName);
         menu.setRunOnce(true);
-        for (var user: validUsers) {
+        for (var user : validUsers) {
             menu.add(user.getBasicInfo(), user::changePropertyMenu);
         }
         menu.show();
@@ -149,7 +164,7 @@ public class UserManagement implements ISaveLoad, IMenu {
     public void statistic() {
         System.out.println("===================================================================================================================================================================================================================================");
         System.out.printf("|| %-5s || %-10s || %-20s || %-10s || %-3s || %-5s || %-11s || %-12s|| %-8s || %-10s || %-12s || %-4s || %-10s || %-50s ||\n",
-                "ID", "Username", "Name", "Permission", "Age", "Shift","Sex", "Day Leave","Salary", "Bonus", "Total", "Rank", "Phone", "Address");
+                "ID", "Username", "Name", "Permission", "Age", "Shift", "Sex", "Day Leave", "Salary", "Bonus", "Total", "Rank", "Phone", "Address");
         for (var user : users) {
             System.out.printf("|| %-5s || %-10s || %-20s || %-10s || %-3s || %-5s || %-11s || %-12s|| %-8s || %-10s || %-12s || %-4s || %-10s || %-50s ||\n",
                     user.getId(), user.getUsername(), user.getName(), user.getPermission(), user.getAge(), user.getWorkShift(), user.getSex(), user.getDayLeave(),
@@ -169,9 +184,55 @@ public class UserManagement implements ISaveLoad, IMenu {
 
     }
 
+    private void deleteByAllMenu() {
+        deleteByFuncMenu("Tất cả", staffUser -> true);
+    }
+
+    private void deleteByIDMenu() {
+        int id = new NInteger("ID").getFromInput().getValue();
+        deleteByFuncMenu("ID", staffUser -> staffUser.getId() == id);
+    }
+
+    private void deleteByNameMenu() {
+        String name = new NString("Tên").getFromInput().getValue();
+        deleteByFuncMenu("Tên", staffUser -> staffUser.getName().toUpperCase(Locale.ROOT).contains(name.toUpperCase(Locale.ROOT)));
+    }
+
+    private void deleteByAgeMenu() {
+        int age = new NInteger("Tuổi").getFromInput().getValue();
+        deleteByFuncMenu("Tuổi", staffUser -> staffUser.getId() == age);
+    }
+
+    private void deleteByUsernameMenu() {
+        var username = new NString("username").getFromInput().getValue();
+        deleteByFuncMenu("Ssername", staffUser -> staffUser.getUsername().toUpperCase(Locale.ROOT).contains(username.toUpperCase(Locale.ROOT)));
+    }
+
+    private void deleteByFuncMenu(String menuName, Function<StaffUser, Boolean> function) {
+        var validUsers = users.stream().filter(function::apply).toList();
+        RunnableMenu menu = new RunnableMenu(menuName);
+        menu.setRunOnce(true);
+        for (var user : validUsers) {
+            menu.add(user.getBasicInfo(), ()->{
+                users.remove(user);
+            });
+        }
+        menu.show();
+    }
+    public void deleteUserMenu() throws FileNotFoundException {
+        RunnableMenu menu = new RunnableMenu("Xoá ");
+        menu.add("Tất cả", this::deleteByAllMenu);
+        menu.add("Xoá bằng ID", this::deleteByIDMenu);
+        menu.add("Xoá bằng tên", this::deleteByNameMenu);
+        menu.add("Xoá bằng tuổi", this::deleteByAgeMenu);
+        menu.add("Xoá bằng tên tài khoản", this::deleteByUsernameMenu);
+        menu.show();
+
+    }
+
 //    endregion
 
-//region SAVE LOAD
+    //region SAVE LOAD
     public void save() {
         File file = new File("./src/Data/User.bin");
         FileOutputStream fos = null;
@@ -210,8 +271,7 @@ public class UserManagement implements ISaveLoad, IMenu {
             fis.close();
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             if (users.isEmpty()) {
                 addAdminDefault();
             }
@@ -227,6 +287,7 @@ public class UserManagement implements ISaveLoad, IMenu {
         menu.addBackgroundTask(this::save);
         menu.add("Chỉnh tài khoản", this::changeUserMenu);
         menu.add("Thêm tài khoản", this::register);
+        menu.add("Xoá tài khoản", this::deleteUserMenu);
         menu.add("Thong ke", this::statistic);
         menu.show();
     }
