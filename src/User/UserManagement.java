@@ -194,12 +194,12 @@ public class UserManagement implements ISaveLoad, IMenu {
     }
 
     private void deleteByNameMenu() {
-        String name = new NString("tên").getFromInput().getValue();
+        String name = new NString("Tên").getFromInput().getValue();
         deleteByFuncMenu("Tên", staffUser -> staffUser.getName().toUpperCase(Locale.ROOT).contains(name.toUpperCase(Locale.ROOT)));
     }
 
     private void deleteByAgeMenu() {
-        int age = new NInteger("tuổi").getFromInput().getValue();
+        int age = new NInteger("Tuổi").getFromInput().getValue();
         deleteByFuncMenu("Tuổi", staffUser -> staffUser.getId() == age);
     }
 
