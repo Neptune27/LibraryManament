@@ -1,4 +1,4 @@
-package General.Customer;
+package General.Common;
 
 import java.io.Serializable;
 import java.util.Scanner;

@@ -374,12 +374,9 @@ public class BookManagement implements ISaveLoad, IMenu {
         Book[] bookToGet = new Book[1];
         RunnableMenu menu = new RunnableMenu("Sach can lay");
         menu.setRunOnce(true);
-        for (var shelf : shelves) {
-            for (var book : shelf.getBooks()) {
-                menu.add(book.getBookName(), ()->{
-                    bookToGet[0] = book;
-                });
-            }
+        var shelfBookPairList = findBook(book -> true);
+        for (var shelfBookPair : shelfBookPairList) {
+            menu.add(shelfBookPair.getValue().getBookName(), ()->bookToGet[0] = shelfBookPair.getValue());
         }
         menu.show();
         return bookToGet[0];

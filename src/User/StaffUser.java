@@ -1,6 +1,6 @@
 package User;
 
-import General.Customer.Date;
+import General.Common.Date;
 import General.Input.NDate;
 import General.Input.NDouble;
 import General.Input.NInteger;
