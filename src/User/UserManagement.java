@@ -220,7 +220,7 @@ public class UserManagement implements ISaveLoad, IMenu {
         menu.show();
     }
     public void deleteUserMenu() throws FileNotFoundException {
-        RunnableMenu menu = new RunnableMenu("Xoá");
+        RunnableMenu menu = new RunnableMenu("Xoá ");
         menu.add("Tất cả", this::deleteByAllMenu);
         menu.add("Xoá bằng ID", this::deleteByIDMenu);
         menu.add("Xoá bằng tên", this::deleteByNameMenu);
