@@ -430,7 +430,16 @@ public class BookManagement implements ISaveLoad, IMenu {
 
 //    endregion
 
-
+    public Book getBookById(String id) {
+        for (var shelf : shelves) {
+            for (var book : shelf.getBooks()) {
+                if (Objects.equals(id, book.getID())) {
+                    return book;
+                }
+            }
+        }
+        return null;
+    }
 
 //    TODO Impl change shelf.
 //    TODO Impl erroring when book have the same ID
@@ -441,9 +450,9 @@ public class BookManagement implements ISaveLoad, IMenu {
         menu.addOnReturnTask(()-> seeBorrowed = false);
 
         menu.addSection("Chung");
-        menu.add("Tìm sách", this::findBookFromInput);
         menu.add("Chuyển sách", this::moveBookByMenu);
         menu.add("Chỉnh sách", this::moveBookByMenu);
+        menu.add("Tìm sách", this::findBookFromInput);
 
         menu.addSection("Thêm");
         menu.add("Thêm sách", this::addBookByInput);

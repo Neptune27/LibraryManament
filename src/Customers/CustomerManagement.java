@@ -1,6 +1,8 @@
 package Customers;
 
 
+import Books.Book;
+import Books.TicketManagement;
 import General.Common.ISaveLoad;
 import General.Input.NInteger;
 import General.Input.NString;
@@ -9,6 +11,7 @@ import General.Menu.RunnableMenu;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 
@@ -245,10 +248,29 @@ public class CustomerManagement implements ISaveLoad, IMenu {
     }
 //    endregion
 
+
+    public ArrayList<Book> getBorrowedBook(int cusId) {
+        return TicketManagement.getInstance().getBorrowedBookByCustomerID(cusId);
+    }
+
+    public String getBorrowedBookToString(int cusId) {
+        var books = getBorrowedBook(cusId);
+        StringBuilder val = new StringBuilder();
+        for (var book : books) {
+            val.append(book.getBookName()).append(", ");
+        }
+        if (val.length() == 0) {
+            return "";
+        }
+
+        return val.substring(0, val.length()-2);
+    }
+
     public void statistic() {
-        System.out.printf("|%-6s|%-25s|%-15s|%-11s|%-4s|%-26s\n","ID","Họ tên","Giới tính","SĐT","Tuổi","Địa chỉ");
-        for (Customer cus:customers){
-            System.out.printf("|%-6s|%-25s|%-15s|%-11s|%-4s|%-26s\n",cus.getId(),cus.getName(),cus.getSex(),cus.getPhoneNumber(),cus.getAge(),cus.getAddress());
+        System.out.println();
+        System.out.printf("| %-6s | %-30s | %-15s | %-11s | %-4s | %-20s | %-26s\n","ID","Ho tên","Giới tính","SĐT","Tuổi", "Sách mượn", "Địa chỉ");
+        for (Customer cus : customers){
+            System.out.printf("| %-6s | %-30s | %-15s | %-11s | %-4s | %-20s | %-26s\n",cus.getId(),cus.getName(),cus.getSex(),cus.getPhoneNumber(),cus.getAge(), getBorrowedBookToString(cus.getId()),cus.getAddress());
         }
     }
 
