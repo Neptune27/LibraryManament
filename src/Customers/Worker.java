@@ -37,8 +37,8 @@ public class Worker extends Customer{
     @Override
     public RunnableMenu makeChangeMenu() {
         RunnableMenu menu = super.makeChangeMenu();
-        menu.addSection("Student");
-        menu.add("Thay truong", ()->workPlace = new Address().setFromInput());
+        menu.addSection("Worker");
+        menu.add("Thay noi lam", ()->workPlace = new Address().setFromInput());
         return menu;
     }
 
@@ -50,5 +50,10 @@ public class Worker extends Customer{
     @Override
     public String toString() {
         return super.toString() + ", " + workPlace;
+    }
+
+    @Override
+    public String getWork() {
+        return getWorkPlace().toString();
     }
 }

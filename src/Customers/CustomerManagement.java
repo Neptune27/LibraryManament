@@ -267,11 +267,17 @@ public class CustomerManagement implements ISaveLoad, IMenu {
     }
 
     public void statistic() {
-        System.out.println();
-        System.out.printf("| %-6s | %-30s | %-15s | %-11s | %-4s | %-20s | %-26s\n","ID","Ho tên","Giới tính","SĐT","Tuổi", "Sách mượn", "Địa chỉ");
+        System.out.println("========================================================================================" +
+                "===========================================================================================");
+        System.out.printf("| %-6s | %-31s | %-20s | %-11s | %-4s | %-34s | %-28s | %-30s |\n",
+                "ID","Ho tên","Giới tính","SDT","Tuổi", "Sách mượn", "Dia chỉ", "Work/School");
         for (Customer cus : customers){
-            System.out.printf("| %-6s | %-30s | %-15s | %-11s | %-4s | %-20s | %-26s\n",cus.getId(),cus.getName(),cus.getSex(),cus.getPhoneNumber(),cus.getAge(), getBorrowedBookToString(cus.getId()),cus.getAddress());
+            System.out.printf("| %-6s | %-30s | %-17s | %-11s | %-4s | %-30s | %-26s | %-30s |\n",
+                    cus.getId(),cus.getName(),cus.getSex(),cus.getPhoneNumber(),cus.getAge(),
+                    getBorrowedBookToString(cus.getId()),cus.getAddress(), cus.getWork());
         }
+        System.out.println("========================================================================================" +
+                "===========================================================================================");
     }
 
     @Override

@@ -47,4 +47,9 @@ public class Student extends Customer{
     public String toString() {
         return super.toString() + ", " + school;
     }
+
+    @Override
+    public String getWork() {
+        return getSchool();
+    }
 }

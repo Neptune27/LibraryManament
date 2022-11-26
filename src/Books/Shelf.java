@@ -47,30 +47,7 @@ public class Shelf implements Serializable, ICreateFromInput {
     }
 
 
-    public void addBookFromInput() {
-        RunnableMenu menu = new RunnableMenu("Thêm Sách Trong Kệ " + shelfName);
-        menu.add("Sách Tâm Lý", ()->{
-            BookTL bookTL = new BookTL();
-            bookTL.setFromInput();
-            books.add(bookTL);
-        });
-        menu.add("TIểu thuyết", ()->{
-            BookTT bookTT = new BookTT();
-            bookTT.setFromInput();
-            books.add(bookTT);
-        });
-        menu.add("Sách thiếu nhi", ()->{
-            BookTN bookTN = new BookTN();
-            bookTN.setFromInput();
-            books.add(bookTN);
-        });
-        menu.add("Sách văn học", ()->{
-            BookVHNT bookVHNT = new BookVHNT();
-            bookVHNT.setFromInput();
-            books.add(bookVHNT);
-        });
-        menu.show();
-    }
+
 
     @Override
     public void setFromInput() {
