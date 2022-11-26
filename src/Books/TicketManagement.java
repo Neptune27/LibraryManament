@@ -109,6 +109,19 @@ public class TicketManagement implements ISaveLoad, IMenu {
     }
 
 
+    public ArrayList<Book> getBorrowedBookByCustomerID(int ID) {
+        ArrayList<Book> books = new ArrayList<>();
+        for (var ticket : tickets) {
+            if (ticket.getCustomerID() == ID) {
+                var book =  bookManagement.getBookById(ticket.getBookID());
+                if (!Objects.isNull(book)) {
+                    books.add(book);
+                }
+            }
+        }
+        return books;
+    }
+
 // endregion
 
     public void addNewTicketMenu(StaffUser staffUser) {

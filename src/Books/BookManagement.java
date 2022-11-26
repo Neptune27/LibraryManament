@@ -46,12 +46,62 @@ public class BookManagement implements ISaveLoad, IMenu {
 
 //region BOOK
 
+    public boolean checkID(String id) {
+        for (var shelf : shelves) {
+            for (var book : shelf.getBooks()) {
+                if (book.getID().equalsIgnoreCase(id)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
+    public void addBookFromInput(Shelf shelf) {
+        RunnableMenu menu = new RunnableMenu("Thêm Sách Trong Kệ " + shelf.getShelfName());
+        menu.add("Sách Tâm Lý", ()->{
+            BookTL bookTL = new BookTL();
+            bookTL.setFromInput();
+            if (checkID(bookTL.getID())) {
+                System.out.println("Id trung");
+                return;
+            }
+            shelf.getBooks().add(bookTL);
+        });
+        menu.add("TIểu thuyết", ()->{
+            BookTT bookTT = new BookTT();
+            bookTT.setFromInput();
+            if (checkID(bookTT.getID())) {
+                System.out.println("Id trung");
+                return;
+            }
+            shelf.getBooks().add(bookTT);
+        });
+        menu.add("Sách thiếu nhi", ()->{
+            BookTN bookTN = new BookTN();
+            bookTN.setFromInput();
+            if (checkID(bookTN.getID())) {
+                System.out.println("Id trung");
+                return;
+            }
+            shelf.getBooks().add(bookTN);
+        });
+        menu.add("Sách văn học", ()->{
+            BookVHNT bookVHNT = new BookVHNT();
+            bookVHNT.setFromInput();
+            if (checkID(bookVHNT.getID())) {
+                System.out.println("Id trung");
+                return;
+            }
+            shelf.getBooks().add(bookVHNT);
+        });
+        menu.show();
+    }
 
     public void addBookByInput() {
         RunnableMenu menu = new RunnableMenu("Thêm sách");
         for (var shelf : shelves) {
-            menu.add("Thêm vào kệ " + shelf.getShelfName() +", ID: " + shelf.getShelfID(), shelf::addBookFromInput);
+            menu.add("Thêm vào kệ " + shelf.getShelfName() +", ID: " + shelf.getShelfID(), ()->addBookFromInput(shelf));
         }
         menu.show();
     }
@@ -176,7 +226,7 @@ public class BookManagement implements ISaveLoad, IMenu {
 
 
     public void findBookFromInput() {
-        RunnableMenu menu = new RunnableMenu("Xoa sách");
+        RunnableMenu menu = new RunnableMenu("Tim sách");
         menu.add("Toàn bộ", ()->byBookAll(this::findBookMenu));
         menu.add("Theo ID", ()->byBookID(this::findBookMenu));
         menu.add("Theo thể loại", this::findBookFromBookTypeMenu);
@@ -220,6 +270,34 @@ public class BookManagement implements ISaveLoad, IMenu {
         menu.show();
     }
 //    endregion MOVE BOOK
+
+
+//    region DELETE BOOK
+//    region BY BOOK
+//    region BY BOOK IMPL
+
+    private void changeBookMenu(ArrayList<AbstractMap.SimpleImmutableEntry<Shelf, Book>> shelfBookPairList, String name) {
+        RunnableMenu menu = new RunnableMenu(name);
+        menu.setRunOnce(true);
+
+        for (var shelfBookPair : shelfBookPairList) {
+            menu.add(String.valueOf(shelfBookPair.getValue().getBookName()), ()->{
+                shelfBookPair.getValue().setFromInput();
+            });
+        }
+
+        menu.show();
+    }
+
+    private void changeByBookType(EBookType bookType) {
+        byBookTypeMenu(bookType, this::changeBookMenu);
+    }
+
+    private void changeBookFromBookTypeMenu() {
+        byBookTypeMenu(this::changeByBookType);
+    }
+//    endregion
+
 
 //    region DELETE BOOK
 //    region BY BOOK
@@ -430,9 +508,77 @@ public class BookManagement implements ISaveLoad, IMenu {
 
 //    endregion
 
+    public Book getBookById(String id) {
+        for (var shelf : shelves) {
+            for (var book : shelf.getBooks()) {
+                if (Objects.equals(id, book.getID())) {
+                    return book;
+                }
+            }
+        }
+        return null;
+    }
+
+//    ------------------------------------mới thêm-------------------------------------//
+    public void editShelfName(Shelf shelf) {
+        String name = new NString("Tên kệ").getFromInput().getValue();
+        shelf.setShelfName(name);
+    }
+
+    public void editShelf() {
+        RunnableMenu menu = new RunnableMenu("Sửa tên kệ sách");
+        for (var shelf : shelves) {
+            menu.add(shelf.getShelfName(),()->{editShelfName(shelf);});
+        }
+        menu.show();
+    }
+
+    public void statisticAll() {
+        RunnableMenu menu = new RunnableMenu("Thống kê toàn bộ sách");
+        menu.addSection(String.format("%-10s%-45s%-30s%-10s%-10s%-30s%-30s%-30s\n",
+                "Mã sách", "Tên sách", "Tên tác giả", "Độ tuổi", "Tình trạng", "Tên kệ", "Thể loại chính", "Thể loại phụ"));
+        for (var shelf : shelves) {
+            for (var book : shelf.getBooks()) {
+                menu.add(String.format("%-10s%-45s%-30s%-10d%-10s%-30s%-30s%-30s\n",
+                        book.getID(),book.getBookName(),book.getAuthorName(),book.getRatedAge(),
+                        book.isBorrowed(),shelf.getShelfName(),book.getMainType(),book.getSubType()),()->{});
+            }
+        }
+        menu.show();
+    }
+
+    public void showStatistic(Shelf shelf) {
+        RunnableMenu menu = new RunnableMenu("Thống kê sách kệ " + shelf.getShelfName());
+        menu.addSection(String.format("%-10s%-45s%-30s%-10s%-10s%-30s%-30s%-30s\n",
+                "Mã sách", "Tên sách", "Tên tác giả", "Độ tuổi", "Tình trạng", "Tên kệ", "Thể loại chính", "Thể loại phụ"));
+        for (var book : shelf.getBooks()) {
+            menu.add(String.format("%-10s%-45s%-30s%-10d%-10s%-30s%-30s%-30s\n",
+                    book.getID(),book.getBookName(),book.getAuthorName(),book.getRatedAge(),
+                    book.isBorrowed(),shelf.getShelfName(),book.getMainType(),book.getSubType()),()->{});
+        }
+        menu.show();
+    }
+
+    public void statisticByShelf() {
+        RunnableMenu menu = new RunnableMenu("Thống kê sách theo loại");
+        for (var shelf: shelves) {
+            menu.add(shelf.getShelfName(),()->{showStatistic(shelf);});
+        }
+        menu.show();
+    }
+
+    public void Statistic() {
+        RunnableMenu menu = new RunnableMenu("Thống kê sách");
+        menu.add("Toàn bộ", this::statisticAll);
+        menu.add("Theo loại", this::statisticByShelf);
+        menu.show();
+    }
+
+    //    ------------------------------------mới thêm-------------------------------------//
 
 
-//    TODO Impl change shelf.
+
+    //    TODO Impl change shelf.
 //    TODO Impl erroring when book have the same ID
     @Override
     public void menu() {
@@ -443,7 +589,7 @@ public class BookManagement implements ISaveLoad, IMenu {
         menu.addSection("Chung");
         menu.add("Tìm sách", this::findBookFromInput);
         menu.add("Chuyển sách", this::moveBookByMenu);
-        menu.add("Chỉnh sách", this::moveBookByMenu);
+        menu.add("Thong ke", this::statisticAll);
 
         menu.addSection("Thêm");
         menu.add("Thêm sách", this::addBookByInput);
@@ -451,7 +597,7 @@ public class BookManagement implements ISaveLoad, IMenu {
 
         menu.addSection("Sua");
         menu.add("Sua sach",this::editBookFromInput);
-        menu.add("Sua ke",()->{});
+        menu.add("Sua ke",this::editShelf);
 
         menu.addSection("Xóa");
         menu.add("Xóa sách", this::deleteBookFromMenu);
@@ -464,13 +610,9 @@ public class BookManagement implements ISaveLoad, IMenu {
             System.out.println("Xem sach muon: " + seeBorrowed);
         });
 
-        menu.addSection("Debug");
-
-        menu.add("Debug", ()->{
-            System.out.println(this.shelves);
-        });
-
         menu.show();
     }
+
+
 
 }
