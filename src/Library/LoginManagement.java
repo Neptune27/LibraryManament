@@ -101,6 +101,5 @@ public class LoginManagement implements ISaveLoad, IMenu {
         menu.addSection("Login");
         menu.add("Login", this::login);
         menu.show();
-        test
     }
 }
