@@ -59,7 +59,9 @@ public class Customer extends Person {
 
     public String getBasicInfo() {
         return getId() + ", " + getName() + ", " + String.valueOf(getAge()) + ", " + getPhoneNumber();
+
     }
+
 
     public String getWork() {
         return "";

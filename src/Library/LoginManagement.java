@@ -108,16 +108,6 @@ public class LoginManagement implements ISaveLoad, IMenu {
 
         menu.addSection("Login");
         menu.add("Login", this::login);
-        menu.add("a", userManagement::statistic);
-//        menu.add("Change by name", userManagement::changeByName);
-//        menu.add("Register", this::register);
-//        menu.add("Save", this::save);
-//        menu.add("Load", this::load);
-//        menu.addSection("Debug");
-//        menu.add("User Size", () -> System.out.println(userManagement.users.size()));
-//        menu.add("Users: ", () -> System.out.println(userManagement.users));
-//        menu.addSection("Debug - Ke sach");
-//        menu.add("Vao QL Sach: ", bookManagement::menu);
         menu.show();
     }
 }
