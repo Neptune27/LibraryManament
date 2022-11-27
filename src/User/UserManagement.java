@@ -29,7 +29,7 @@ public class UserManagement implements ISaveLoad, IMenu {
         return instance;
     }
 
-    private UserManagement(){};
+    private UserManagement(){}
 
 
 
@@ -117,13 +117,6 @@ public class UserManagement implements ISaveLoad, IMenu {
         }
     }
 
-//    void delete() {
-//        try {
-//            addMenuUserFromInput();
-//        } catch (RuntimeException e) {
-//            System.out.println("Tên tk đã tồn tại");
-//        }
-//    }
 
 //    region CHANGE USER
 
@@ -219,7 +212,7 @@ public class UserManagement implements ISaveLoad, IMenu {
         }
         menu.show();
     }
-    public void deleteUserMenu() throws FileNotFoundException {
+    public void deleteUserMenu() {
         RunnableMenu menu = new RunnableMenu("Xoá ");
         menu.add("Tất cả", this::deleteByAllMenu);
         menu.add("Xoá bằng ID", this::deleteByIDMenu);

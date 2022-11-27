@@ -31,7 +31,6 @@ public class LoginManagement implements ISaveLoad, IMenu {
             switch (user.getPermission()){
                 case PHUC_VU -> generateMenuPhucVu(user);
                 case THU_KY -> generateMenuThuKy(user);
-                case CUSTOMER -> generateMenuCustomer();
                 case ADMIN -> generateMenuAdmin(user);
             }
         } catch (UsernameNotFoundException e) {
@@ -44,10 +43,6 @@ public class LoginManagement implements ISaveLoad, IMenu {
     public static void main(String[] args) {
         LoginManagement loginManagement = new LoginManagement();
         loginManagement.menu();
-    }
-
-
-    public static void generateMenuCustomer() {
     }
 
 
@@ -77,13 +72,10 @@ public class LoginManagement implements ISaveLoad, IMenu {
 
     public void generateMenuAdmin(StaffUser user) {
         RunnableMenu menu = new RunnableMenu("Admin");
-        menu.add("Thống kê", ()->{});
         menu.add("Quản lý khách hàng", customerManagement::menu);
         menu.add("Quản lý sách", bookManagement::menu);
         menu.add("Quản lý thẻ mượn sách", ()->ticketManagement.menu(user));
         menu.add("Quản lý tài khoản", userManagement::menu);
-        menu.add("Xuất thông tin", ()->{});
-
         menu.show();
     }
 
