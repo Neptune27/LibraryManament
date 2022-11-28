@@ -527,6 +527,7 @@ public class BookManagement implements ISaveLoad, IMenu {
 
     public void editShelf() {
         RunnableMenu menu = new RunnableMenu("Sửa tên kệ sách");
+        menu.setRunOnce(true);
         for (var shelf : shelves) {
             menu.add(shelf.getShelfName(),()->{editShelfName(shelf);});
         }
