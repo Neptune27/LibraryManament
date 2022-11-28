@@ -72,8 +72,8 @@ public class CustomerManagement implements ISaveLoad, IMenu {
             ObjectInputStream oos = new ObjectInputStream(fis);
             customers = (ArrayList<Customer>) oos.readObject();
             fis.close();
-        } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException | IOException ignored) {
+            System.out.println("CSDL cua Ticket khong co => Tao CSDL moi");
         }
         finally {
             setNewLatestCustomerId();
@@ -280,6 +280,7 @@ public class CustomerManagement implements ISaveLoad, IMenu {
                 "===========================================================================================");
     }
 
+
     @Override
     public void menu() {
         RunnableMenu menu = new RunnableMenu("Quan Ly Khach Hang");
@@ -288,7 +289,7 @@ public class CustomerManagement implements ISaveLoad, IMenu {
         menu.add("Chỉnh sửa khách hàng", this::changeCustomerMenu);
         menu.add("Xóa khách hàng", this::removeCustomerMenu);
         menu.add("Tìm khách hàng",this::findCustomerMenu);
-        menu.add("Thống kê", this::statistic);
+        menu.add("Thống kê tong", this::statistic);
         menu.show();
     }
 

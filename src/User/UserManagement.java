@@ -12,6 +12,7 @@ import User.Errors.UsernameNotFoundException;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Function;
@@ -154,7 +155,18 @@ public class UserManagement implements ISaveLoad, IMenu {
         changeByFuncMenu("Ssername", staffUser -> staffUser.getUsername().toUpperCase(Locale.ROOT).contains(username.toUpperCase(Locale.ROOT)));
     }
 
-    public void statistic() {
+    public void changeUserMenu() throws FileNotFoundException {
+        RunnableMenu menu = new RunnableMenu("Thay đổi");
+        menu.add("Tất cả", this::changeByAllMenu);
+        menu.add("Thay bằng ID", this::changeByIDMenu);
+        menu.add("Thay bằng tên", this::changeByNameMenu);
+        menu.add("Thay bằng tuổi", this::changeByAgeMenu);
+        menu.add("Thay bằng tên tài khoản", this::changeByUsernameMenu);
+        menu.show();
+
+    }
+
+    public void statistic(List<StaffUser> users) {
         System.out.println("===================================================================================================================================================================================================================================");
         System.out.printf("|| %-5s || %-10s || %-20s || %-10s || %-3s || %-5s || %-11s || %-12s|| %-8s || %-10s || %-12s || %-4s || %-10s || %-50s ||\n",
                 "ID", "Username", "Name", "Permission", "Age", "Shift", "Sex", "Day Leave", "Salary", "Bonus", "Total", "Rank", "Phone", "Address");
@@ -166,16 +178,45 @@ public class UserManagement implements ISaveLoad, IMenu {
         System.out.println("===================================================================================================================================================================================================================================");
     }
 
-    public void changeUserMenu() throws FileNotFoundException {
+
+    private void statByIDMenu() {
+        int id = new NInteger("ID").getFromInput().getValue();
+        var validUsers = users.stream().filter(staffUser -> staffUser.getId() == id).toList();
+        statistic(validUsers);
+    }
+
+    private void statByNameMenu() {
+        String name = new NString("tên").getFromInput().getValue();
+        var validUsers = users.stream().filter( staffUser -> staffUser.getName().toUpperCase(Locale.ROOT).contains(name.toUpperCase(Locale.ROOT))).toList();
+        statistic(validUsers);
+    }
+
+    private void statByAgeMenu() {
+        int age = new NInteger("tuổi").getFromInput().getValue();
+        var validUsers = users.stream().filter(staffUser -> staffUser.getAge() == age).toList();
+        statistic(validUsers);
+    }
+
+    private void statByUsernameMenu() {
+        var username = new NString("username").getFromInput().getValue();
+        var validUsers = users.stream().filter( staffUser -> staffUser.getUsername().toUpperCase(Locale.ROOT).contains(username.toUpperCase(Locale.ROOT))).toList();
+        statistic(validUsers);
+    }
+
+
+    public void statisticMenu() throws FileNotFoundException {
         RunnableMenu menu = new RunnableMenu("Thay đổi");
-        menu.add("Tất cả", this::changeByAllMenu);
-        menu.add("Thay bằng ID", this::changeByIDMenu);
-        menu.add("Thay bằng tên", this::changeByNameMenu);
-        menu.add("Thay bằng tuổi", this::changeByAgeMenu);
-        menu.add("Thay bằng tên tài khoản", this::changeByUsernameMenu);
+        menu.add("Tất cả", ()->statistic(users));
+        menu.add("Tim bằng ID", this::statByIDMenu);
+        menu.add("Tim bằng tên", this::statByNameMenu);
+        menu.add("Tim bằng tuổi", this::statByAgeMenu);
+        menu.add("Tim bằng tên tài khoản", this::statByUsernameMenu);
         menu.show();
 
     }
+
+
+
 
     private void deleteByAllMenu() {
         deleteByFuncMenu("Tất cả", staffUser -> true);
@@ -262,8 +303,8 @@ public class UserManagement implements ISaveLoad, IMenu {
             ObjectInputStream oos = new ObjectInputStream(fis);
             users = (ArrayList<StaffUser>) oos.readObject();
             fis.close();
-        } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException | IOException ignored) {
+            System.out.println("CSDL cua User khong co => Tao CSDL moi");
         } finally {
             if (users.isEmpty()) {
                 addAdminDefault();
@@ -281,7 +322,7 @@ public class UserManagement implements ISaveLoad, IMenu {
         menu.add("Chỉnh tài khoản", this::changeUserMenu);
         menu.add("Thêm tài khoản", this::register);
         menu.add("Xoá tài khoản", this::deleteUserMenu);
-        menu.add("Thong ke", this::statistic);
+        menu.add("Thong ke", this::statisticMenu);
         menu.show();
     }
 }

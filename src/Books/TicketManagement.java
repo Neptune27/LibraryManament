@@ -99,8 +99,8 @@ public class TicketManagement implements ISaveLoad, IMenu {
             ObjectInputStream oos = new ObjectInputStream(fis);
             tickets = (ArrayList<BorrowedTicket>) oos.readObject();
             fis.close();
-        } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException | IOException ignored) {
+            System.out.println("CSDL cua Ticket khong co => Tao CSDL moi");
         }
         finally {
             save();
@@ -151,10 +151,21 @@ public class TicketManagement implements ISaveLoad, IMenu {
         menu.show();
     }
 
+    public void statistic() {
+        System.out.println("========Thong ke========");
+        for (var ticket : tickets) {
+            System.out.printf("ID: %s, Customer ID: %s, Staff ID: %s, Book ID: %s, Price: %s, Start: %s, End: %s\n",
+                    ticket.getTicketID(), ticket.getCustomerID(), ticket.getIssueByID(), ticket.getBookID(), ticket.getPrice(), ticket.getDateBorrowed(), ticket.getExpiredDate());
+        }
+        System.out.println("=======================");
+    }
+
+
     public void menu(StaffUser staffUser) {
         RunnableMenu menu = new RunnableMenu("Quan ly phieu muon");
         menu.addBackgroundTask(this::save);
         menu.add("Thêm thẻ mượn", ()->addNewTicketMenu(staffUser));
+        menu.add("Thong ke", this::statistic);
         menu.add("Xoa the muon", this::removeTicketMenu);
         menu.show();
     }

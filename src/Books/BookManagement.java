@@ -500,7 +500,7 @@ public class BookManagement implements ISaveLoad, IMenu {
             shelves = (ArrayList<Shelf>) oos.readObject();
             fis.close();
         } catch (ClassNotFoundException | IOException ignored) {
-            System.out.println("Khoi tao chuong trinh Sach!");
+            System.out.println("CSDL cua Sach khong co => Tao CSDL moi");
         } finally {
             setNewLatestShelfId();
         }
@@ -567,7 +567,7 @@ public class BookManagement implements ISaveLoad, IMenu {
         menu.show();
     }
 
-    public void Statistic() {
+    public void statisticMenu() {
         RunnableMenu menu = new RunnableMenu("Thống kê sách");
         menu.add("Toàn bộ", this::statisticAll);
         menu.add("Theo loại", this::statisticByShelf);
@@ -589,7 +589,7 @@ public class BookManagement implements ISaveLoad, IMenu {
         menu.addSection("Chung");
         menu.add("Tìm sách", this::findBookFromInput);
         menu.add("Chuyển sách", this::moveBookByMenu);
-        menu.add("Thong ke", this::statisticAll);
+        menu.add("Thong ke", this::statisticMenu);
 
         menu.addSection("Thêm");
         menu.add("Thêm sách", this::addBookByInput);
