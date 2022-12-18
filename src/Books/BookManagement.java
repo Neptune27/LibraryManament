@@ -188,7 +188,8 @@ public class BookManagement implements ISaveLoad, IMenu {
             for (var book: shelf.getBooks()) {
                 if (compareFunc.apply(book)) {
                     if (seeBorrowed) {
-                        shelfBookPairList.add(new AbstractMap.SimpleImmutableEntry<>(shelf, book));
+                        if (ticketManagement.isBorrowed(book))
+                            shelfBookPairList.add(new AbstractMap.SimpleImmutableEntry<>(shelf, book));
                     }
                     else {
                         if (!ticketManagement.isBorrowed(book)) {
@@ -540,9 +541,11 @@ public class BookManagement implements ISaveLoad, IMenu {
                 "Mã sách", "Tên sách", "Tên tác giả", "Độ tuổi", "Tình trạng", "Tên kệ", "Thể loại chính", "Thể loại phụ"));
         for (var shelf : shelves) {
             for (var book : shelf.getBooks()) {
+                var isB =  ticketManagement.isBorrowed(book) ? "Da muon" : "chua muon";
+
                 menu.add(String.format("%-10s%-45s%-30s%-10d%-10s%-30s%-30s%-30s\n",
                         book.getID(),book.getBookName(),book.getAuthorName(),book.getRatedAge(),
-                        book.isBorrowed(),shelf.getShelfName(),book.getMainType(),book.getSubType()),()->{});
+                        isB,shelf.getShelfName(),book.getMainType(),book.getSubType()),()->{});
             }
         }
         menu.show();
@@ -553,9 +556,10 @@ public class BookManagement implements ISaveLoad, IMenu {
         menu.addSection(String.format("%-10s%-45s%-30s%-10s%-10s%-30s%-30s%-30s\n",
                 "Mã sách", "Tên sách", "Tên tác giả", "Độ tuổi", "Tình trạng", "Tên kệ", "Thể loại chính", "Thể loại phụ"));
         for (var book : shelf.getBooks()) {
+            var isB =  book.isBorrowed() ? "Da muon" : "chua muon";
             menu.add(String.format("%-10s%-45s%-30s%-10d%-10s%-30s%-30s%-30s\n",
                     book.getID(),book.getBookName(),book.getAuthorName(),book.getRatedAge(),
-                    book.isBorrowed(),shelf.getShelfName(),book.getMainType(),book.getSubType()),()->{});
+                   isB,shelf.getShelfName(),book.getMainType(),book.getSubType()),()->{});
         }
         menu.show();
     }

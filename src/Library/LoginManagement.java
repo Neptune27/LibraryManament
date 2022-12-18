@@ -63,7 +63,7 @@ public class LoginManagement implements ISaveLoad, IMenu {
         menu.addSection("Chức vụ thư ký");
         menu.add("Quản lý khách hàng", customerManagement::menu);
         menu.add("Quản lý sách", bookManagement::menu);
-        menu.add("Quản lý mượn sách", ticketManagement::menu);
+        menu.add("Quản lý mượn sách", ()->ticketManagement.menu(user));
         menu.addSection("Quản lý tài khoản");
         menu.add("Chỉnh tài khoản", user::changePropertyMenu);
         menu.show();
